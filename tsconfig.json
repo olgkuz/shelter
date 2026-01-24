@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    // Строгий режим + дополнительные проверки
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -10,11 +11,34 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+
+    // Рекомендуется включить для разных ОС
+    "forceConsistentCasingInFileNames": true,
+
+    // Строгие режимы, которые ты уже использовал
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+
+    // Angular декораторы
     "experimentalDecorators": true,
+
+    // Для использования tslib (обязательно установить пакет `tslib`)
     "importHelpers": true,
+
+    // Современный таргет и модуль
     "target": "ES2022",
-    "module": "preserve"
+    "module": "ES2022",
+
+    // Важно для Angular 17+ и TypeScript 5.x
+    "moduleResolution": "bundler",
+
+    // Удобная работа с ESM/CJS
+    "esModuleInterop": true,
+
+    // Рекомендуется для Angular (чтобы не ломались поля классов)
+    "useDefineForClassFields": false
   },
+
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
@@ -22,6 +46,7 @@
     "typeCheckHostBindings": true,
     "strictTemplates": true
   },
+
   "files": [],
   "references": [
     {

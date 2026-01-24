@@ -2,6 +2,13 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    
+     {
+      "command": "npm run serverWithNg ",
+      "name": "Run npm serverWithNg",
+      "request": "launch",
+      "type": "node-terminal"
+    },
     {
       "name": "ng serve",
       "type": "chrome",

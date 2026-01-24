@@ -3,9 +3,10 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,               // 👈 ОБЯЗАТЕЛЬНО
+  imports: [RouterOutlet],        // 👈 теперь это валидно
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']       // лучше во множественном числе
 })
 export class App {
   protected readonly title = signal('shelter');
