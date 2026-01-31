@@ -1,0 +1,86 @@
+[1m[33m[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`[39m[22m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './layout/home/home' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.routes.ts:4:21:
+[37m      4 │ import { Home } from [32m'./layout/home/home'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./layout/home/home"[0m
+
+    src/app/app.routes.ts:3:21:
+[37m      3 │ import { Home } from [32m'./layout/home/home'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './pages/pets/pets/pets' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.routes.ts:2:21:
+[37m      2 │ import { Pets } from [32m'./pages/pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../pets/pets/pets' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home/home.ts:3:21:
+[37m      3 │ import { Pets } from [32m'../pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home/home.ts:8:18:
+[37m      8 │   imports: [Main, [32mPets[37m, ContactForm],
+        ╵                   [32m~~~~[0m
+
+  Unknown reference.
+
+    src/app/pages/home/home.ts:8:18:
+[37m      8 │   imports: [Main, [32mPets[37m, ContactForm],
+        ╵                   [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./pages/pets/pets/pets"[0m
+
+    src/app/app.routes.ts:1:21:
+[37m      1 │ import { Pets } from [32m'./pages/pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../pets/pets/pets"[0m
+
+    src/app/pages/home/home.ts:4:21:
+[37m      4 │ import { Pets } from [32m'../pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../pets/pets/pets' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home/home.ts:3:21:
+[37m      3 │ import { Pets } from [32m'../pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/home/home.ts:8:18:
+[37m      8 │   imports: [Main, [32mPets[37m, ContactForm],
+        ╵                   [32m~~~~[0m
+
+  Unknown reference.
+
+    src/app/pages/home/home.ts:8:18:
+[37m      8 │   imports: [Main, [32mPets[37m, ContactForm],
+        ╵                   [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../pets/pets/pets"[0m
+
+    src/app/pages/home/home.ts:4:21:
+[37m      4 │ import { Pets } from [32m'../pets/pets/pets'[37m;
+        ╵                      [32m~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

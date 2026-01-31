@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
-import { Pets } from './pages/pets/pets/pets';
+import { Pets } from './pages/home/pets/pets/pets';
+import { Layout } from './layout/layout';
+import { Home } from './pages/home/home';
 
 export const routes: Routes = [
-    {path:'pets', component: Pets},
-    {path:'', redirectTo: '/pets',component: Pets},
-    {path:'pets', redirectTo: '/pets',component: Pets}
+    {
+        path: '',
+        component: Layout,
+        children: [
+            { path: '', component: Home, pathMatch: 'full' },
+            { path: 'pets', component: Pets }
+        ]
+    },
+    { path: '**', redirectTo: '' }
 ];

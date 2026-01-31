@@ -30,7 +30,11 @@
             "styles": [
               "src/styles.scss",
             "./node_modules/primeflex/primeflex.css"
-            ]
+            ],
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/styles"]
+            }
           },
           "configurations": {
             "production": {

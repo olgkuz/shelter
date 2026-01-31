@@ -1,0 +1,18 @@
+<form class="contact-form" (submit)="$event.preventDefault()">
+  <div class="field">
+    <label for="contact-name">Имя</label>
+    <input id="contact-name" type="text" name="name" placeholder="Ваше имя" required />
+  </div>
+
+  <div class="field">
+    <label for="contact-phone">Телефон</label>
+    <input id="contact-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required />
+  </div>
+
+  <div class="field checkbox-field">
+    <input id="contact-agree" type="checkbox" name="agree" required />
+    <label for="contact-agree">Согласен(а) на обработку персональных данных</label>
+  </div>
+
+  <button type="submit" class="submit-button">Связаться</button>
+</form>

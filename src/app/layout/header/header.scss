@@ -1,0 +1,26 @@
+@use "variables" as var;
+
+:host {
+  height: 60px;
+  width: 100%;
+  display: block;
+}
+.layout-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  background: var.$header-background;
+  color: beige;
+  height: 100%;
+  padding: 4px 6px;
+
+  &_right-block {
+    display: flex;
+
+    & .use-info {
+      width: 100px;
+    }
+  }
+
+
+}

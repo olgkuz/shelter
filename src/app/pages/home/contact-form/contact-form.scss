@@ -1,0 +1,45 @@
+.contact-form {
+  display: grid;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.field input[type='text'],
+.field input[type='tel'] {
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+
+.checkbox-field {
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+
+.submit-button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background: #1f2937;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background: #111827;
+}
