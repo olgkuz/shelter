@@ -1,19 +1,36 @@
 <div class="layout-header">
-    <div class="layout-header_menu"> </div>
-    <div class="layout-header_right-block">
-        
-        <div class="user-info"> </div>
-        
-        <div class="logout"> </div>
-        
-        <div class="date">
-          <div>
-            {{dateTime | date: 'HH:mm:ss'}}
-          </div>  
-        <div class="p-o m-0"> 
-            {{dateTime | date:'EEEE'}}
-        </div>
-        </div>
+
+  <!-- Меню -->
+  <div class="layout-header__menu">
+    <p-menubar [model]="menuItems"></p-menubar>
+  </div>
+
+  <!-- Правая часть -->
+  <div class="layout-header__right-block">
+
+    <!-- SOS кнопка -->
+    <div class="sos-btn mr-3">
+      <p-button
+        [icon]="sosIcon"
+        label="SOS"
+        severity="danger"
+        pTooltip="Сообщить о животном в беде"
+        (mouseenter)="hoverSOS(true)"
+        (mouseleave)="hoverSOS(false)"
+        (onClick)="goToSOS()">
+      </p-button>
     </div>
+
+    <!-- Время -->
+    <div class="date">
+      <div>
+        {{ dateTime | date:'HH:mm:ss' }}
+      </div>
+      <div>
+        {{ dateTime | date:'EEEE' }}
+      </div>
+    </div>
+
+  </div>
 
 </div>

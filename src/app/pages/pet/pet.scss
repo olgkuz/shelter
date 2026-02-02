@@ -1,3 +1,108 @@
 :host {
   display: block;
 }
+
+.pet {
+  padding: 24px 16px 40px;
+}
+
+.pet__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.pet__state {
+  text-align: center;
+  padding: 24px 0;
+}
+
+.pet__state--error {
+  color: #b00020;
+}
+
+.pet__card {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.pet__media {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.pet__media img {
+  width: 100%;
+  display: block;
+}
+
+.pet__title {
+  margin: 0 0 6px;
+  font-size: 32px;
+}
+
+.pet__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.7;
+}
+
+.pet__dot {
+  font-size: 12px;
+}
+
+.pet__status {
+  margin: 10px 0 16px;
+  font-weight: 600;
+}
+
+.pet__description,
+.pet__character {
+  margin: 0 0 12px;
+}
+
+.pet__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 20px;
+}
+
+.pet__tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.pet__tag--active {
+  opacity: 1;
+  background: #f0f7ff;
+  border-color: #7aa7ff;
+}
+
+.pet__gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.pet__gallery img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .pet__card {
+    grid-template-columns: 1fr;
+  }
+}

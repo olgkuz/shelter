@@ -80,3 +80,11 @@ Page reload sent to client(s).
 Application bundle generation complete. [0.129 seconds] - 2026-01-31T16:36:52.498Z
 
 Component update sent to client(s).
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m[2m | [22m[1mRaw size[22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m [2m | [22m[36m31.89 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.206 seconds] - 2026-01-31T17:22:07.820Z
+
+Component update sent to client(s).

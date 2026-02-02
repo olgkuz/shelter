@@ -1,1 +1,53 @@
-<p>pet works!</p>,
+<section class="pet">
+  <a class="pet__back" routerLink="/pets">← Назад к списку</a>
+
+  @if (loading) {
+    <div class="pet__state">Загрузка...</div>
+  } @else if (error) {
+    <div class="pet__state pet__state--error">{{ error }}</div>
+  } @else if (pet) {
+    <p-card class="pet__card">
+      <ng-template pTemplate="header">
+        <div class="pet__media">
+          <img
+            [src]="imagesBase + '/' + pet.coverImg"
+            alt="{{ pet.name }}"
+            title="{{ pet.name }}"
+          />
+        </div>
+      </ng-template>
+
+      <div class="pet__content">
+        <h1 class="pet__title">{{ pet.name }}</h1>
+        <div class="pet__meta">
+          <span>{{ pet.age }} лет</span>
+          <span class="pet__dot">•</span>
+          <span>{{ pet.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+        </div>
+        <div class="pet__status">{{ pet.status }}</div>
+
+        <p class="pet__description">{{ pet.description }}</p>
+        <p class="pet__character"><strong>Характер:</strong> {{ pet.character }}</p>
+
+        <div class="pet__tags">
+          <span class="pet__tag" [class.pet__tag--active]="pet.sterilized">Стерилизован</span>
+          <span class="pet__tag" [class.pet__tag--active]="pet.vaccinated">Привит</span>
+          <span class="pet__tag" [class.pet__tag--active]="pet.specialCare">Особый уход</span>
+        </div>
+
+        @if (pet.images?.length) {
+          <div class="pet__gallery">
+            @for (img of pet.images; track img) {
+              <img
+                [src]="imagesBase + '/' + img"
+                alt="{{ pet.name }} фото"
+                title="{{ pet.name }}"
+                loading="lazy"
+              />
+            }
+          </div>
+        }
+      </div>
+    </p-card>
+  }
+</section>

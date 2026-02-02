@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main',
+  standalone: true,
   imports: [],
   templateUrl: './main.html',
   styleUrl: './main.scss',

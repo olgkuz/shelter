@@ -5,6 +5,7 @@ import { ContactForm } from './contact-form/contact-form';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [Main, Pets, ContactForm],
   templateUrl: './home.html',
   styleUrl: './home.scss',

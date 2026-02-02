@@ -1,4 +1,10 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -7,6 +13,7 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura'; // или другая тема
 
 import { routes } from './app.routes';
+import { ConfigService, initializeApp } from './servises/config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +23,7 @@ export const appConfig: ApplicationConfig = {
 
     // если будешь ходить в API
     provideHttpClient(),
+    provideAppInitializer(() => initializeApp(inject(ConfigService))),
 
     // нужно для анимаций PrimeNG (кнопки, диалоги и т.п.)
     provideAnimationsAsync(),

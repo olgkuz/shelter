@@ -1,1 +1,40 @@
-<p>pets works!</p>,
+<section class="pets">
+  <div class="pets__header">
+    <h2 class="pets__title">Наши питомцы</h2>
+    <p class="pets__subtitle">Выберите друга, которому нужен дом</p>
+  </div>
+
+  @if (loading) {
+    <div class="pets__state">Загрузка...</div>
+  } @else if (error) {
+    <div class="pets__state pets__state--error">{{ error }}</div>
+  } @else {
+    <div class="pets__grid">
+      @for (item of pets; track item.id) {
+        <a
+          class="pets__card"
+          [routerLink]="['/pets', item.id]"
+          [attr.aria-label]="'Открыть карточку ' + item.name"
+        >
+          <div class="pets__image">
+            <img
+              [src]="imagesBase + '/' + item.coverImg"
+              alt="{{ item.name }}"
+              title="{{ item.name }}"
+              loading="lazy"
+            />
+          </div>
+          <div class="pets__info">
+            <div class="pets__name">{{ item.name }}</div>
+            <div class="pets__meta">
+              <span>{{ item.age }} лет</span>
+              <span class="pets__dot">•</span>
+              <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+            </div>
+            <div class="pets__status">{{ item.status }}</div>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</section>
