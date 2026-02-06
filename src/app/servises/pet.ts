@@ -102,6 +102,19 @@ export class PetService {
     );
   }
 
+  /** Похожие животные */
+  getSimilarPets(id: string, limit = 8): Observable<IPet[]> {
+    const params = new HttpParams().set('limit', String(limit));
+
+    return this.http.get<IPetsServerRes>(`${API.petSimilar}/${id}/similar`, { params }).pipe(
+      map((res) => Array.isArray(res?.pets) ? res.pets : []),
+      catchError((err) => {
+        console.log('getSimilarPets error', err);
+        return of([]);
+      })
+    );
+  }
+
   /** Отдельный эндпоинт на фото (если используешь /pets/:id/photos) */
   /* TEMP: temporarily unused
   getPetPhotos(id: string): Observable<string[]> {

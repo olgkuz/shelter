@@ -30,6 +30,11 @@
   color: #b00020;
 }
 
+.pets__search {
+  margin: 0 auto 20px;
+  max-width: 560px;
+}
+
 .pets__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { API } from '../../../../shared/api';
 import { PetService } from '../../../../servises/pet';
@@ -9,12 +13,20 @@ import { IPet } from '../../../../models/pet.model';
 @Component({
   selector: 'app-pets',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLink,
+    FormsModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule
+  ],
   templateUrl: './pets.html',
   styleUrl: './pets.scss',
 })
 export class Pets implements OnInit, OnDestroy {
   pets: IPet[] = [];
+  searchQuery = '';
   loading = false;
   error = '';
   readonly imagesBase = API.images;
@@ -40,5 +52,15 @@ export class Pets implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+  }
+
+  get filteredPets(): IPet[] {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      return this.pets;
+    }
+
+    return this.pets.filter((pet) => pet.name.toLowerCase().includes(query));
   }
 }

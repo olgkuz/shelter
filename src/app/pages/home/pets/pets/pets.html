@@ -9,32 +9,51 @@
   } @else if (error) {
     <div class="pets__state pets__state--error">{{ error }}</div>
   } @else {
-    <div class="pets__grid">
-      @for (item of pets; track item.id) {
-        <a
-          class="pets__card"
-          [routerLink]="['/pets', item.id]"
-          [attr.aria-label]="'Открыть карточку ' + item.name"
-        >
-          <div class="pets__image">
-            <img
-              [src]="imagesBase + '/' + item.coverImg"
-              alt="{{ item.name }}"
-              title="{{ item.name }}"
-              loading="lazy"
-            />
-          </div>
-          <div class="pets__info">
-            <div class="pets__name">{{ item.name }}</div>
-            <div class="pets__meta">
-              <span>{{ item.age }} лет</span>
-              <span class="pets__dot">•</span>
-              <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
-            </div>
-            <div class="pets__status">{{ item.status }}</div>
-          </div>
-        </a>
-      }
+    <div class="pets__search">
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-search" aria-hidden="true"></i>
+        </p-inputgroup-addon>
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Поиск по кличке питомца"
+          aria-label="Поиск по кличке питомца"
+        />
+      </p-inputgroup>
     </div>
+
+    @if (filteredPets.length) {
+      <div class="pets__grid">
+        @for (item of filteredPets; track item.id) {
+          <a
+            class="pets__card"
+            [routerLink]="['/pets', item.id]"
+            [attr.aria-label]="'Открыть карточку ' + item.name"
+          >
+            <div class="pets__image">
+              <img
+                [src]="imagesBase + '/' + item.coverImg"
+                alt="{{ item.name }}"
+                title="{{ item.name }}"
+                loading="lazy"
+              />
+            </div>
+            <div class="pets__info">
+              <div class="pets__name">{{ item.name }}</div>
+              <div class="pets__meta">
+                <span>{{ item.age }} лет</span>
+                <span class="pets__dot">•</span>
+                <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+              </div>
+              <div class="pets__status">{{ item.status }}</div>
+            </div>
+          </a>
+        }
+      </div>
+    } @else {
+      <div class="pets__state">По вашему запросу ничего не найдено.</div>
+    }
   }
 </section>

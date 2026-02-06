@@ -38,6 +38,58 @@ function normalizeText(s) {
   return String(s || '').toLowerCase();
 }
 
+function getCommonCharacterWords(a, b) {
+  const aWords = new Set(
+    String(a || '')
+      .toLowerCase()
+      .split(/[,\s]+/)
+      .map((part) => part.trim())
+      .filter((part) => part.length >= 4)
+  );
+
+  if (!aWords.size) return 0;
+
+  return String(b || '')
+    .toLowerCase()
+    .split(/[,\s]+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length >= 4)
+    .reduce((acc, word) => acc + (aWords.has(word) ? 1 : 0), 0);
+}
+
+function detectPetType(pet) {
+  const text = `${pet.description || ''} ${pet.character || ''}`.toLowerCase();
+
+  if (text.includes('кошка') || text.includes('кошеч') || text.includes('котик') || text.includes('кот')) {
+    return 'cat';
+  }
+
+  if (text.includes('собака') || text.includes('пес') || text.includes('пёс') || text.includes('щен')) {
+    return 'dog';
+  }
+
+  return 'unknown';
+}
+
+function getSimilarityScore(base, candidate, baseType) {
+  let score = 0;
+
+  const ageDiff = Math.abs(Number(base.age) - Number(candidate.age));
+  score += Math.max(0, 4 - ageDiff);
+
+  if (baseType !== 'unknown' && detectPetType(candidate) === baseType) score += 4;
+
+  if (base.sex === candidate.sex) score += 1;
+  if (Boolean(base.sterilized) === Boolean(candidate.sterilized)) score += 1;
+  if (Boolean(base.vaccinated) === Boolean(candidate.vaccinated)) score += 1;
+  if (Boolean(base.specialCare) === Boolean(candidate.specialCare)) score += 1;
+
+  const commonCharacterWords = getCommonCharacterWords(base.character, candidate.character);
+  score += Math.min(commonCharacterWords, 3);
+
+  return score;
+}
+
 // health check
 app.get('/', (req, res) => {
   res.send('Pets API is running');
@@ -133,6 +185,54 @@ app.get('/pets/:id', (req, res) => {
   };
 
   res.json(full);
+});
+
+/**
+ * GET /pets/:id/similar
+ * Query:
+ *  - limit (default 8)
+ * Возвращает похожих питомцев (по типу, возрасту и характеристикам)
+ */
+app.get('/pets/:id/similar', (req, res) => {
+  const { pets } = readPetsFile();
+  const id = req.params.id;
+  const limit = req.query.limit !== undefined ? Number(req.query.limit) : 8;
+
+  const basePet = pets.find(p => String(p.id) === String(id));
+  if (!basePet) {
+    return res.status(404).json({ error: true, message: `Животное не найдено по id=${id}` });
+  }
+
+  const baseType = detectPetType(basePet);
+
+  let result = pets.filter(p => String(p.id) !== String(id));
+
+  if (baseType !== 'unknown') {
+    result = result.filter(p => detectPetType(p) === baseType);
+  }
+
+  result = result
+    .map(p => ({
+      pet: p,
+      score: getSimilarityScore(basePet, p, baseType)
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, Number.isFinite(limit) ? limit : 8)
+    .map(({ pet }) => ({
+      id: pet.id,
+      name: pet.name,
+      age: pet.age,
+      sex: pet.sex,
+      status: pet.status,
+      sterilized: pet.sterilized,
+      vaccinated: pet.vaccinated,
+      specialCare: pet.specialCare,
+      character: pet.character,
+      coverImg: pet.coverImg || (Array.isArray(pet.images) ? pet.images[0] : pet.img),
+      images: Array.isArray(pet.images) ? pet.images : (pet.img ? [pet.img] : [])
+    }));
+
+  res.json({ pets: result });
 });
 
 /**

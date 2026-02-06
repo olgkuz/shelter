@@ -6,11 +6,12 @@ import { CardModule } from 'primeng/card';
 import { API } from '../../shared/api';
 import { PetService } from '../../servises/pet';
 import { IPet } from '../../models/pet.model';
+import { SamePet } from './same-pet/same-pet';
 
 @Component({
   selector: 'app-pet',
   standalone: true,
-  imports: [CommonModule, RouterLink, CardModule],
+  imports: [CommonModule, RouterLink, CardModule, SamePet],
   templateUrl: './pet.html',
   styleUrl: './pet.scss',
 })

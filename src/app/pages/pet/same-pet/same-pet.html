@@ -1,0 +1,49 @@
+<section class="same-pet">
+  <button type="button" class="same-pet__toggle" (click)="toggleOpen()">
+    Посмотрите на других обитателей приюта
+  </button>
+
+  @if (isOpen) {
+    <div class="same-pet__panel">
+      @if (loading) {
+        <div class="same-pet__state">Подбираем похожих питомцев...</div>
+      } @else if (similarPets.length) {
+        <div class="same-pet__carousel">
+          <button type="button" class="same-pet__nav" (click)="showPrev()" aria-label="Предыдущий питомец">
+            &lsaquo;
+          </button>
+
+          @if (similarPets[currentIndex]; as item) {
+            <a class="same-pet__card" [routerLink]="['/pets', item.id]">
+              <div class="same-pet__image">
+                <img
+                  [src]="imagesBase + '/' + item.coverImg"
+                  [alt]="item.name"
+                  [title]="item.name"
+                  loading="lazy"
+                />
+              </div>
+              <div class="same-pet__content">
+                <h3>{{ item.name }}</h3>
+                <div class="same-pet__meta">
+                  <span>{{ item.age }} лет</span>
+                  <span>&bull;</span>
+                  <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+                </div>
+                <p>{{ item.character }}</p>
+              </div>
+            </a>
+          }
+
+          <button type="button" class="same-pet__nav" (click)="showNext()" aria-label="Следующий питомец">
+            &rsaquo;
+          </button>
+        </div>
+
+        <div class="same-pet__counter">{{ currentIndex + 1 }} / {{ similarPets.length }}</div>
+      } @else {
+        <div class="same-pet__state">Пока нет похожих питомцев, но скоро появятся.</div>
+      }
+    </div>
+  }
+</section>

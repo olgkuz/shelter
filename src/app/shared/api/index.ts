@@ -12,6 +12,9 @@ export const API = {
   // Получить одно животное по id
   petById: `${serverIp}/pets`, // + /:id
 
+  // Получить похожих животных
+  petSimilar: `${serverIp}/pets`, // + /:id/similar
+
   // Получить фото животного
   petPhotos: `${serverIp}/pets`, // + /:id/photos
 
