@@ -93,11 +93,11 @@ export class PetService {
   }
 
   /** Карточка животного */
-  getPetById(id: string): Observable<IPet> {
+  getPetById(id: string): Observable<IPet | null> {
     return this.http.get<IPet>(`${API.petById}/${id}`).pipe(
       catchError((err) => {
         console.log('getPetById error', err);
-        return of(null as any);
+        return of(null);
       })
     );
   }

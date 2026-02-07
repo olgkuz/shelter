@@ -7,13 +7,18 @@ const app = express();
 const port = 3000;
 
 const petsJsonPath = path.join(__dirname, '..', 'server-data', 'pets.json');
+const placeholderImagePath = path.join(__dirname, '..', 'public', 'img', 'pet1_1.jpg');
 
 // middleware
 app.use(cors());
 app.use(express.json());
 
 // static images (например: http://localhost:3000/images/pets/pet1_1.jpg)
-app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
+app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images'), { fallthrough: true }));
+// fallback placeholder for missing images
+app.use('/images', (req, res) => {
+  res.sendFile(placeholderImagePath);
+});
 
 // helpers
 function readPetsFile() {

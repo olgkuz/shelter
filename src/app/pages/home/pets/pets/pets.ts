@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,6 +15,7 @@ import { IPet } from '../../../../models/pet.model';
   standalone: true,
   imports: [
     CommonModule,
+    NgOptimizedImage,
     RouterLink,
     FormsModule,
     InputGroupModule,

@@ -10,9 +10,12 @@
       <ng-template pTemplate="header">
         <div class="pet__media">
           <img
-            [src]="imagesBase + '/' + pet.coverImg"
+            [ngSrc]="imagesBase + '/' + pet.coverImg"
             alt="{{ pet.name }}"
             title="{{ pet.name }}"
+            width="720"
+            height="540"
+            priority
           />
         </div>
       </ng-template>
@@ -39,10 +42,11 @@
           <div class="pet__gallery">
             @for (img of pet.images; track img) {
               <img
-                [src]="imagesBase + '/' + img"
+                [ngSrc]="imagesBase + '/' + img"
                 alt="{{ pet.name }} фото"
                 title="{{ pet.name }}"
-                loading="lazy"
+                width="240"
+                height="180"
               />
             }
           </div>

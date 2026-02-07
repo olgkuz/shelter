@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 import { Pets } from './pages/home/pets/pets/pets';
-import { Pet } from './pages/pet/pet';
 
 import { VetAdvice } from './pages/vet-advice/vet-advice';
 import { Board } from './pages/board/board';
@@ -32,7 +31,7 @@ export const routes: Routes = [
       // Карточка животного
       {
         path: 'pets/:id',
-        component: Pet
+        loadComponent: () => import('./pages/pet/pet').then((m) => m.Pet)
       },
 
       // Советы ветеринара

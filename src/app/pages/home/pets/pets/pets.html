@@ -34,10 +34,11 @@
           >
             <div class="pets__image">
               <img
-                [src]="imagesBase + '/' + item.coverImg"
+                [ngSrc]="imagesBase + '/' + item.coverImg"
                 alt="{{ item.name }}"
                 title="{{ item.name }}"
-                loading="lazy"
+                width="400"
+                height="300"
               />
             </div>
             <div class="pets__info">

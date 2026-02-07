@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { GalleriaModule } from 'primeng/galleria';
 import { Subscription } from 'rxjs';
 import { IPet } from '../../../models/pet.model';
 import { PetService } from '../../../servises/pet';
@@ -9,7 +10,7 @@ import { API } from '../../../shared/api';
 @Component({
   selector: 'app-same-pet',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, GalleriaModule],
   templateUrl: './same-pet.html',
   styleUrl: './same-pet.scss',
 })
@@ -18,9 +19,22 @@ export class SamePet implements OnChanges, OnDestroy {
 
   readonly imagesBase = API.images;
   similarPets: IPet[] = [];
+  galleryItems: Array<{
+    pet: IPet;
+    itemImageSrc: string;
+    thumbnailImageSrc: string;
+    alt: string;
+    title: string;
+  }> = [];
+  responsiveOptions: Array<{ breakpoint: string; numVisible: number }> = [
+    { breakpoint: '1024px', numVisible: 5 },
+    { breakpoint: '768px', numVisible: 4 },
+    { breakpoint: '560px', numVisible: 3 }
+  ];
+
+  activeIndex = 0;
   isOpen = false;
   loading = false;
-  currentIndex = 0;
 
   private sub: Subscription | null = null;
 
@@ -28,7 +42,7 @@ export class SamePet implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pet']) {
-      this.currentIndex = 0;
+      this.activeIndex = 0;
       if (this.isOpen) {
         this.loadSimilarPets();
       }
@@ -46,20 +60,10 @@ export class SamePet implements OnChanges, OnDestroy {
     }
   }
 
-  showNext(): void {
-    if (!this.similarPets.length) return;
-    this.currentIndex = (this.currentIndex + 1) % this.similarPets.length;
-  }
-
-  showPrev(): void {
-    if (!this.similarPets.length) return;
-    this.currentIndex =
-      (this.currentIndex - 1 + this.similarPets.length) % this.similarPets.length;
-  }
-
   private loadSimilarPets(): void {
     if (!this.pet?.id) {
       this.similarPets = [];
+      this.galleryItems = [];
       return;
     }
 
@@ -68,11 +72,19 @@ export class SamePet implements OnChanges, OnDestroy {
     this.sub = this.petService.getSimilarPets(this.pet.id).subscribe({
       next: (pets) => {
         this.similarPets = pets;
-        this.currentIndex = 0;
+        this.galleryItems = pets.map((p) => ({
+          pet: p,
+          itemImageSrc: `${this.imagesBase}/${p.coverImg}`,
+          thumbnailImageSrc: `${this.imagesBase}/${p.coverImg}`,
+          alt: p.name,
+          title: p.name
+        }));
+        this.activeIndex = 0;
         this.loading = false;
       },
       error: () => {
         this.similarPets = [];
+        this.galleryItems = [];
         this.loading = false;
       }
     });

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { of, Subscription, switchMap } from 'rxjs';
@@ -11,7 +11,7 @@ import { SamePet } from './same-pet/same-pet';
 @Component({
   selector: 'app-pet',
   standalone: true,
-  imports: [CommonModule, RouterLink, CardModule, SamePet],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, CardModule, SamePet],
   templateUrl: './pet.html',
   styleUrl: './pet.scss',
 })
@@ -44,6 +44,7 @@ export class Pet implements OnInit, OnDestroy {
       .subscribe({
         next: (pet) => {
           if (!pet) {
+            this.error = 'Не удалось загрузить карточку питомца. Проверьте, что backend запущен на http://localhost:3000';
             this.loading = false;
             return;
           }

@@ -7,40 +7,48 @@
     <div class="same-pet__panel">
       @if (loading) {
         <div class="same-pet__state">Подбираем похожих питомцев...</div>
-      } @else if (similarPets.length) {
-        <div class="same-pet__carousel">
-          <button type="button" class="same-pet__nav" (click)="showPrev()" aria-label="Предыдущий питомец">
-            &lsaquo;
-          </button>
-
-          @if (similarPets[currentIndex]; as item) {
-            <a class="same-pet__card" [routerLink]="['/pets', item.id]">
-              <div class="same-pet__image">
+      } @else if (galleryItems.length) {
+        <div class="same-pet__galleria">
+          <p-galleria
+            [value]="galleryItems"
+            [activeIndex]="activeIndex"
+            (activeIndexChange)="activeIndex = $event"
+            [responsiveOptions]="responsiveOptions"
+            [containerStyle]="{ 'max-width': '760px' }"
+            [numVisible]="5"
+          >
+            <ng-template pTemplate="item" let-item>
+              <a class="same-pet__item" [routerLink]="['/pets', item.pet.id]">
                 <img
-                  [src]="imagesBase + '/' + item.coverImg"
-                  [alt]="item.name"
-                  [title]="item.name"
-                  loading="lazy"
+                  class="same-pet__item-img"
+                  [ngSrc]="item.itemImageSrc"
+                  [alt]="item.alt"
+                  width="760"
+                  height="570"
                 />
-              </div>
-              <div class="same-pet__content">
-                <h3>{{ item.name }}</h3>
-                <div class="same-pet__meta">
-                  <span>{{ item.age }} лет</span>
-                  <span>&bull;</span>
-                  <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+                <div class="same-pet__item-info">
+                  <div class="same-pet__item-title">{{ item.pet.name }}</div>
+                  <div class="same-pet__item-meta">
+                    <span>{{ item.pet.age }} лет</span>
+                    <span>&bull;</span>
+                    <span>{{ item.pet.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+                  </div>
+                  <div class="same-pet__item-char">{{ item.pet.character }}</div>
                 </div>
-                <p>{{ item.character }}</p>
-              </div>
-            </a>
-          }
+              </a>
+            </ng-template>
 
-          <button type="button" class="same-pet__nav" (click)="showNext()" aria-label="Следующий питомец">
-            &rsaquo;
-          </button>
+            <ng-template pTemplate="thumbnail" let-item>
+              <img
+                class="same-pet__thumb"
+                [ngSrc]="item.thumbnailImageSrc"
+                [alt]="item.alt"
+                width="160"
+                height="64"
+              />
+            </ng-template>
+          </p-galleria>
         </div>
-
-        <div class="same-pet__counter">{{ currentIndex + 1 }} / {{ similarPets.length }}</div>
       } @else {
         <div class="same-pet__state">Пока нет похожих питомцев, но скоро появятся.</div>
       }
