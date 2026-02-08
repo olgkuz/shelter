@@ -52,6 +52,11 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+.pets__card.active {
+  border-color: rgba(31, 111, 235, 0.55);
+  box-shadow: 0 10px 22px rgba(31, 111, 235, 0.18);
+}
+
 .pets__card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);

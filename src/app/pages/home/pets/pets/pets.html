@@ -25,7 +25,7 @@
     </div>
 
     @if (filteredPets.length) {
-      <div class="pets__grid">
+      <div class="pets__grid" appHighlight [selector]="'.pets__card'">
         @for (item of filteredPets; track item.id) {
           <a
             class="pets__card"

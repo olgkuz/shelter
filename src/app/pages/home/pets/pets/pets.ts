@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { API } from '../../../../shared/api';
 import { PetService } from '../../../../servises/pet';
 import { IPet } from '../../../../models/pet.model';
+import { HighlightDirective } from '../../../../shared/derectives/highlight';
 
 @Component({
   selector: 'app-pets',
@@ -20,7 +21,8 @@ import { IPet } from '../../../../models/pet.model';
     FormsModule,
     InputGroupModule,
     InputGroupAddonModule,
-    InputTextModule
+    InputTextModule,
+    HighlightDirective
   ],
   templateUrl: './pets.html',
   styleUrl: './pets.scss',
