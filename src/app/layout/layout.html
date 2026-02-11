@@ -4,9 +4,9 @@
     </header>
     <div class="main-content flex flex-1 p-3 overflow-hidden">
         <div class="flex-grow-1 overflow-auto">
-           <router-outlet></router-outlet>
+           <router-outlet #outlet="outlet"></router-outlet>
         </div>
-        <app-aside></app-aside>
+        <app-aside *ngIf="outlet?.activatedRouteData?.['showAside']"></app-aside>
     </div>
     <footer>
         <app-footer></app-footer>

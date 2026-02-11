@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Footer } from './footer/footer';
 import { Header } from './header/header';
@@ -7,7 +8,7 @@ import { Aside } from './aside/aside';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterModule, Footer, Header,Aside],
+  imports: [RouterModule, NgIf, Footer, Header, Aside],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
 })

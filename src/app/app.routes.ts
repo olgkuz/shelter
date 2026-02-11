@@ -31,7 +31,8 @@ export const routes: Routes = [
       // Карточка животного
       {
         path: 'pets/:id',
-        loadComponent: () => import('./pages/pet/pet').then((m) => m.Pet)
+        loadComponent: () => import('./pages/pet/pet').then((m) => m.Pet),
+        data: { showAside: true }
       },
 
       // Советы ветеринара
