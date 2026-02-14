@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { of, Subscription, switchMap } from 'rxjs';
 import { CardModule } from 'primeng/card';
 import { API } from '../../shared/api';
+import { LoaderService } from '../../servises/loader';
 import { PetService } from '../../servises/pet';
 import { IPet } from '../../models/pet.model';
 import { SamePet } from './same-pet/same-pet';
@@ -25,11 +26,13 @@ export class Pet implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private petService: PetService
+    private petService: PetService,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
     this.loading = true;
+    this.loaderService.setLoader(true);
     this.sub = this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -46,20 +49,26 @@ export class Pet implements OnInit, OnDestroy {
           if (!pet) {
             this.error = 'Не удалось загрузить карточку питомца. Проверьте, что backend запущен на http://localhost:3000';
             this.loading = false;
+            this.loaderService.setLoader(false);
             return;
           }
           this.pet = pet;
           this.error = '';
           this.loading = false;
+          this.loaderService.setLoader(false);
         },
         error: () => {
           this.error = 'Не удалось загрузить карточку питомца.';
           this.loading = false;
+          this.loaderService.setLoader(false);
         }
       });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.loaderService.setLoader(false);
   }
 }
+
+

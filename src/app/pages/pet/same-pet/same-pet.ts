@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { GalleriaModule } from 'primeng/galleria';
 import { Subscription } from 'rxjs';
 import { IPet } from '../../../models/pet.model';
+import { LoaderService } from '../../../servises/loader';
 import { PetService } from '../../../servises/pet';
 import { API } from '../../../shared/api';
 
@@ -38,7 +39,10 @@ export class SamePet implements OnChanges, OnDestroy {
 
   private sub: Subscription | null = null;
 
-  constructor(private petService: PetService) {}
+  constructor(
+    private petService: PetService,
+    private loaderService: LoaderService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pet']) {
@@ -51,6 +55,7 @@ export class SamePet implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.loaderService.setLoader(false);
   }
 
   toggleOpen(): void {
@@ -68,6 +73,7 @@ export class SamePet implements OnChanges, OnDestroy {
     }
 
     this.loading = true;
+    this.loaderService.setLoader(true);
     this.sub?.unsubscribe();
     this.sub = this.petService.getSimilarPets(this.pet.id).subscribe({
       next: (pets) => {
@@ -81,12 +87,15 @@ export class SamePet implements OnChanges, OnDestroy {
         }));
         this.activeIndex = 0;
         this.loading = false;
+        this.loaderService.setLoader(false);
       },
       error: () => {
         this.similarPets = [];
         this.galleryItems = [];
         this.loading = false;
+        this.loaderService.setLoader(false);
       }
     });
   }
 }
+

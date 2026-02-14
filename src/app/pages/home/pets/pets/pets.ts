@@ -7,6 +7,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { API } from '../../../../shared/api';
+import { LoaderService } from '../../../../servises/loader';
 import { PetService } from '../../../../servises/pet';
 import { IPet } from '../../../../models/pet.model';
 import { HighlightDirective } from '../../../../shared/derectives/highlight';
@@ -36,25 +37,32 @@ export class Pets implements OnInit, OnDestroy {
 
   private sub: Subscription | null = null;
 
-  constructor(private petService: PetService) {}
+  constructor(
+    private petService: PetService,
+    private loaderService: LoaderService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
+    this.loaderService.setLoader(true);
     this.sub = this.petService.loadPets().subscribe({
       next: (pets) => {
         this.pets = pets;
         this.error = '';
         this.loading = false;
+        this.loaderService.setLoader(false);
       },
       error: () => {
         this.error = 'Не удалось загрузить список животных.';
         this.loading = false;
+        this.loaderService.setLoader(false);
       }
     });
   }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.loaderService.setLoader(false);
   }
 
   get filteredPets(): IPet[] {
@@ -67,3 +75,5 @@ export class Pets implements OnInit, OnDestroy {
     return this.pets.filter((pet) => pet.name.toLowerCase().includes(query));
   }
 }
+
+
