@@ -6,14 +6,16 @@ import {
   provideZonelessChangeDetection
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura'; // или другая тема
 
 import { routes } from './app.routes';
 import { ConfigService, initializeApp } from './servises/config.service';
+import { errorInterceptor } from './shared/interceptors/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,8 +24,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     // если будешь ходить в API
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([errorInterceptor])),
     provideAppInitializer(() => initializeApp(inject(ConfigService))),
+    MessageService,
 
     // нужно для анимаций PrimeNG (кнопки, диалоги и т.п.)
     provideAnimationsAsync(),
@@ -44,3 +47,4 @@ export const appConfig: ApplicationConfig = {
     })
   ]
 };
+

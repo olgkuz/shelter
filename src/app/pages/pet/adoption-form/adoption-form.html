@@ -1,0 +1,106 @@
+<section class="adoption">
+  <a class="adoption__back" [routerLink]="['/pets', petId]">← Назад к питомцу</a>
+
+  <h1 class="adoption__title">{{ title }}</h1>
+
+  <form class="adoption__form" [formGroup]="form" (ngSubmit)="submit()">
+    <label class="adoption__field">
+      <span>Имя</span>
+      <input type="text" formControlName="firstName" />
+      @if (isInvalid('firstName')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Фамилия</span>
+      <input type="text" formControlName="lastName" />
+      @if (isInvalid('lastName')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Возраст</span>
+      <input type="number" min="18" formControlName="age" />
+      @if (isInvalid('age')) {
+        <small>Введите возраст от 18 лет</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Количество животных в доме</span>
+      <select formControlName="petsAtHome">
+        <option value="">Выберите вариант</option>
+        <option value="none">Нет</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4+">4 и более</option>
+      </select>
+      @if (isInvalid('petsAtHome')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Есть ли маленькие дети до 3 лет</span>
+      <select formControlName="hasSmallChildren">
+        <option value="">Выберите вариант</option>
+        <option value="yes">Да</option>
+        <option value="no">Нет</option>
+      </select>
+      @if (isInvalid('hasSmallChildren')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Как относитесь к стерилизации беспородных животных</span>
+      <textarea rows="3" formControlName="sterilizationAttitude"></textarea>
+      @if (isInvalid('sterilizationAttitude')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Чем планируете кормить</span>
+      <textarea rows="3" formControlName="plannedFood"></textarea>
+      @if (isInvalid('plannedFood')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Что будете делать, если питомец заболеет</span>
+      <textarea rows="3" formControlName="illnessActions"></textarea>
+      @if (isInvalid('illnessActions')) {
+        <small>Поле обязательно</small>
+      }
+    </label>
+
+    <label class="adoption__field">
+      <span>Номер телефона</span>
+      <input type="tel" formControlName="phone" />
+      @if (isInvalid('phone')) {
+        <small>Введите корректный номер телефона</small>
+      }
+    </label>
+
+    <label class="adoption__consent">
+      <input type="checkbox" formControlName="consent" />
+      <span>
+        Нажимая на кнопку, я соглашаюсь с
+        <a routerLink="/privacy-policy">политикой конфиденциальности</a>
+        и обработкой персональных данных.
+      </span>
+    </label>
+    @if (isInvalid('consent')) {
+      <small class="adoption__consent-error">Подтвердите согласие перед отправкой</small>
+    }
+
+    <button class="adoption__submit" type="submit" [disabled]="form.invalid">
+      Отправить анкету
+    </button>
+  </form>
+</section>

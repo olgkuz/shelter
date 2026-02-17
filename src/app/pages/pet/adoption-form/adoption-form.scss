@@ -1,0 +1,92 @@
+:host {
+  display: block;
+}
+
+.adoption {
+  max-width: 760px;
+  padding: 24px 16px 40px;
+  margin: 0 auto;
+}
+
+.adoption__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.adoption__title {
+  margin: 0 0 18px;
+  font-size: 30px;
+}
+
+.adoption__form {
+  display: grid;
+  gap: 14px;
+}
+
+.adoption__field {
+  display: grid;
+  gap: 6px;
+}
+
+.adoption__field span {
+  font-weight: 600;
+}
+
+.adoption__field input,
+.adoption__field select,
+.adoption__field textarea {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.adoption__field small {
+  color: #b00020;
+  font-size: 12px;
+}
+
+.adoption__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.adoption__consent input {
+  margin-top: 2px;
+}
+
+.adoption__consent a {
+  color: #1769aa;
+}
+
+.adoption__consent-error {
+  color: #b00020;
+  font-size: 12px;
+}
+
+.adoption__submit {
+  margin-top: 4px;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: #2e7d32;
+  cursor: pointer;
+}
+
+.adoption__submit:hover {
+  background: #256a2a;
+}
+
+.adoption__submit:disabled {
+  background: #9aa0a6;
+  cursor: not-allowed;
+}

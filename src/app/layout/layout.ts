@@ -6,11 +6,12 @@ import { Header } from './header/header';
 import { Aside } from './aside/aside';
 import { LoaderComponent } from '../shared/components/loader/loader';
 import { LoaderService } from '../servises/loader';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterModule, NgIf, Footer, Header, Aside, LoaderComponent,AsyncPipe],
+  imports: [RouterModule, NgIf, Footer, Header, Aside, LoaderComponent, AsyncPipe, ToastModule],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
 })

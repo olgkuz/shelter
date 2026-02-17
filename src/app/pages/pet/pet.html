@@ -38,6 +38,8 @@
           <span class="pet__tag" [class.pet__tag--active]="pet.specialCare">Особый уход</span>
         </div>
 
+        <a class="pet__adopt-btn" [routerLink]="['/pets', pet.id, 'adopt']">Хочу забрать домой</a>
+
         @if (pet.images?.length) {
           <div class="pet__gallery">
             @for (img of pet.images; track img) {
