@@ -1,4 +1,18 @@
-<section class="page">
+<section class="page vet-advice">
   <h1>Советы ветеринара</h1>
-  <p>Здесь будут рекомендации по уходу, питанию и профилактике.</p>
+  <p>Здесь публикуются статьи, загруженные администратором.</p>
+
+  @if (articles.length) {
+    <ul class="vet-advice__list">
+      @for (item of articles; track item.id) {
+        <li class="vet-advice__item">
+          <h2>{{ item.title }}</h2>
+          <p class="vet-advice__summary">{{ item.summary }}</p>
+          <p>{{ item.content }}</p>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="vet-advice__empty">Пока нет опубликованных статей.</p>
+  }
 </section>

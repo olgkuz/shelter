@@ -1,7 +1,11 @@
 <section class="pets">
   <div class="pets__header">
-    <h2 class="pets__title">Наши питомцы</h2>
-    <p class="pets__subtitle">Выберите друга, которому нужен дом</p>
+    <h2 class="pets__title">
+      {{ isHomePreview ? 'Кому особенно нужен дом' : 'Наши питомцы' }}
+    </h2>
+    <p class="pets__subtitle">
+      {{ isHomePreview ? 'Первые в списке - питомцы с повышенным приоритетом' : 'Выберите друга, которому нужен дом' }}
+    </p>
   </div>
 
   @if (loading) {
@@ -9,23 +13,30 @@
   } @else if (error) {
     <div class="pets__state pets__state--error">{{ error }}</div>
   } @else {
-    <div class="pets__search">
-      <p-inputgroup>
-        <p-inputgroup-addon>
-          <i class="pi pi-search" aria-hidden="true"></i>
-        </p-inputgroup-addon>
-        <input
-          pInputText
-          type="text"
-          [(ngModel)]="searchQuery"
-          placeholder="Поиск по кличке питомца"
-          aria-label="Поиск по кличке питомца"
-        />
-      </p-inputgroup>
-    </div>
+    @if (!isHomePreview) {
+      <div class="pets__search">
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <i class="pi pi-search" aria-hidden="true"></i>
+          </p-inputgroup-addon>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="Поиск по кличке питомца"
+            aria-label="Поиск по кличке питомца"
+          />
+        </p-inputgroup>
+      </div>
+    }
 
     @if (filteredPets.length) {
-      <div class="pets__grid" appHighlight [selector]="'.pets__card'">
+      <div
+        class="pets__grid"
+        [class.pets__grid--home]="isHomePreview"
+        appHighlight
+        [selector]="'.pets__card'"
+      >
         @for (item of filteredPets; track item.id) {
           <a
             class="pets__card"
@@ -48,11 +59,20 @@
                 <span class="pets__dot">•</span>
                 <span>{{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
               </div>
+              @if (item.priorityToHome || item.priorityOrder === 0) {
+                <div class="pets__priority">Срочно нужен дом</div>
+              }
               <div class="pets__status">{{ item.status }}</div>
             </div>
           </a>
         }
       </div>
+
+      @if (isHomePreview) {
+        <div class="pets__actions">
+          <a class="pets__all-btn" routerLink="/pets">Посмотреть всех обитателей приюта</a>
+        </div>
+      }
     } @else {
       <div class="pets__state">По вашему запросу ничего не найдено.</div>
     }

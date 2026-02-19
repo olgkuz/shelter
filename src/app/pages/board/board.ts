@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Announcement } from '../../models/admin-content.model';
+import { AdminContentService } from '../../servises/admin-content';
 
 @Component({
   selector: 'app-board',
@@ -7,4 +9,10 @@ import { Component } from '@angular/core';
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })
-export class Board {}
+export class Board {
+  announcements: Announcement[] = [];
+
+  constructor(private adminContentService: AdminContentService) {
+    this.announcements = this.adminContentService.getPublishedAnnouncements();
+  }
+}

@@ -1,4 +1,13 @@
 <div class="footer">
-  <div class="footer__copy">© {{ currentYear }} Shelter</div>
+  <div class="footer__copy-wrap">
+    <div class="footer__copy">&copy; {{ brandYear }} Shelter</div>
+    <button
+      type="button"
+      class="footer__admin-trigger"
+      aria-label="Вход в админку"
+      (click)="goToAdminLogin()"
+    ></button>
+  </div>
+
   <a class="footer__link" routerLink="/privacy-policy">Политика конфиденциальности</a>
 </div>

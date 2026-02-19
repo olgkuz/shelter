@@ -1,5 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -29,11 +29,14 @@ import { HighlightDirective } from '../../../../shared/derectives/highlight';
   styleUrl: './pets.scss',
 })
 export class Pets implements OnInit, OnDestroy {
+  @Input() viewMode: 'full' | 'home' = 'full';
+
   pets: IPet[] = [];
   searchQuery = '';
   loading = false;
   error = '';
   readonly imagesBase = API.images;
+  readonly homePreviewLimit = 8;
 
   private sub: Subscription | null = null;
 
@@ -65,15 +68,49 @@ export class Pets implements OnInit, OnDestroy {
     this.loaderService.setLoader(false);
   }
 
-  get filteredPets(): IPet[] {
-    const query = this.searchQuery.trim().toLowerCase();
+  get isHomePreview(): boolean {
+    return this.viewMode === 'home';
+  }
 
-    if (!query) {
-      return this.pets;
+  get visiblePets(): IPet[] {
+    const query = this.searchQuery.trim().toLowerCase();
+    const sourcePets = this.sortedPets;
+    const filtered = query
+      ? sourcePets.filter((pet) => pet.name.toLowerCase().includes(query))
+      : sourcePets;
+
+    if (!this.isHomePreview) {
+      return filtered;
     }
 
-    return this.pets.filter((pet) => pet.name.toLowerCase().includes(query));
+    return filtered.slice(0, this.homePreviewLimit);
+  }
+
+  private get sortedPets(): IPet[] {
+    return [...this.pets].sort((a, b) => {
+      const aPriority = this.getPriorityValue(a);
+      const bPriority = this.getPriorityValue(b);
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  private getPriorityValue(pet: IPet): number {
+    if (typeof pet.priorityOrder === 'number') {
+      return pet.priorityOrder;
+    }
+
+    return pet.priorityToHome ? 0 : 1000;
+  }
+
+  get filteredPets(): IPet[] {
+    return this.visiblePets;
   }
 }
+
 
 

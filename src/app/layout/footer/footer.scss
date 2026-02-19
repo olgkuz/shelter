@@ -10,17 +10,31 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
 }
 
 .footer__copy {
-  opacity: 0.75;
+  color: var(--color-muted);
   font-size: 14px;
+}
+
+.footer__copy-wrap {
+  position: relative;
+}
+
+.footer__admin-trigger {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  cursor: default;
 }
 
 .footer__link {
   text-decoration: none;
-  color: #1769aa;
+  color: var(--color-secondary);
   font-weight: 600;
 }
 

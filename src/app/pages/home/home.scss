@@ -11,6 +11,16 @@
 .section-title {
   margin: 0 0 16px;
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.5px;
+  color: var(--color-secondary);
+}
+
+.section-title--center {
+  text-align: center;
+}
+
+.home-contact-center {
+  display: flex;
+  justify-content: center;
 }

@@ -15,6 +15,8 @@ export interface IPet {
   specialCare: boolean;
   coverImg: string;
   images: string[];
+  priorityToHome?: boolean;
+  priorityOrder?: number;
 }
 
 export interface IPetsServerRes {

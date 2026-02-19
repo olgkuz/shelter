@@ -2,12 +2,17 @@
   <app-main></app-main>
 
   <section class="home-section" id="pets">
-    <h2 class="section-title">Pets</h2>
-    <app-pets></app-pets>
+    <app-pets viewMode="home"></app-pets>
+  </section>
+
+  <section class="home-section" id="accordion">
+    <app-accordion></app-accordion>
   </section>
 
   <section class="home-section" id="contact">
-    <h2 class="section-title">Contact</h2>
-    <app-contact-form></app-contact-form>
+    <h2 class="section-title section-title--center">Свяжитесь со мной</h2>
+    <div class="home-contact-center">
+      <app-contact-form></app-contact-form>
+    </div>
   </section>
 </section>

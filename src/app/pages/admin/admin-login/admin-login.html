@@ -1,0 +1,33 @@
+<section class="admin-login">
+  <h1>Вход в админку</h1>
+
+  <form class="admin-login__form" (submit)="$event.preventDefault(); onSubmit()">
+    <label for="admin-login">Логин</label>
+    <input
+      id="admin-login"
+      type="text"
+      name="login"
+      [(ngModel)]="loginValue"
+      placeholder="Введите логин"
+      autocomplete="username"
+      required
+    />
+
+    <label for="admin-password">Пароль</label>
+    <input
+      id="admin-password"
+      type="password"
+      name="password"
+      [(ngModel)]="passwordValue"
+      placeholder="Введите пароль"
+      autocomplete="current-password"
+      required
+    />
+
+    @if (error) {
+      <div class="admin-login__error">{{ error }}</div>
+    }
+
+    <button type="submit">Войти</button>
+  </form>
+</section>

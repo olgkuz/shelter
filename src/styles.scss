@@ -2,3 +2,28 @@
 @use "input";
 @use "reset";
 @use "variables";
+
+:root {
+  --font-main: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  --color-bg: #fcfbf7;
+  --color-surface: #ffffff;
+  --color-text: #1f2933;
+  --color-muted: #5f6c78;
+  --color-border: #d9e1e8;
+
+  --color-primary: #f08b24;
+  --color-primary-hover: #da7816;
+  --color-secondary: #2e8b81;
+  --color-secondary-soft: #e7f4f2;
+
+  --color-danger: #b84236;
+  --color-danger-soft: #fde8e5;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+}

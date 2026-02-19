@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -9,5 +9,11 @@ import { RouterLink } from '@angular/router';
   styleUrl: './footer.scss',
 })
 export class Footer {
-  readonly currentYear = new Date().getFullYear();
+  readonly brandYear = 2026;
+
+  constructor(private router: Router) {}
+
+  goToAdminLogin(): void {
+    this.router.navigate(['/admin/login']);
+  }
 }

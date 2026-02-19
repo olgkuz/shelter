@@ -5,3 +5,43 @@
 .page {
   padding: 24px 16px;
 }
+
+.vet-advice {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.vet-advice__list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.vet-advice__item {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--color-surface);
+}
+
+.vet-advice__item h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.vet-advice__summary {
+  margin: 0 0 8px;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.vet-advice__item p {
+  margin: 0;
+}
+
+.vet-advice__empty {
+  margin-top: 14px;
+  color: var(--color-muted);
+}

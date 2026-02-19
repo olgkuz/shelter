@@ -1,0 +1,136 @@
+<section class="admin-dashboard">
+  <div class="admin-dashboard__top">
+    <div>
+      <h1>Админка: загрузка контента</h1>
+      <p>Управляйте питомцами, статьями и объявлениями. Объявления проходят модерацию.</p>
+    </div>
+    <button type="button" (click)="logout()">Выйти</button>
+  </div>
+
+  <div class="admin-tabs" role="tablist" aria-label="Разделы загрузки">
+    <button
+      type="button"
+      class="admin-tab"
+      [class.admin-tab--active]="activeTab === 'pets'"
+      (click)="setTab('pets')"
+    >
+      Загрузка питомцев
+    </button>
+    <button
+      type="button"
+      class="admin-tab"
+      [class.admin-tab--active]="activeTab === 'articles'"
+      (click)="setTab('articles')"
+    >
+      Загрузка статей с советами
+    </button>
+    <button
+      type="button"
+      class="admin-tab"
+      [class.admin-tab--active]="activeTab === 'announcements'"
+      (click)="setTab('announcements')"
+    >
+      Загрузка объявлений
+    </button>
+  </div>
+
+  @if (activeTab === 'pets') {
+    <section class="admin-section">
+      <h2>Новый питомец</h2>
+      <form class="admin-form" (submit)="$event.preventDefault(); submitPet()">
+        <input type="text" name="name" [(ngModel)]="petForm.name" placeholder="Имя" required />
+        <input type="number" name="age" [(ngModel)]="petForm.age" placeholder="Возраст" min="0" required />
+
+        <select name="sex" [(ngModel)]="petForm.sex">
+          <option value="male">Мальчик</option>
+          <option value="female">Девочка</option>
+        </select>
+
+        <input type="text" name="status" [(ngModel)]="petForm.status" placeholder="Статус" required />
+        <input type="text" name="coverImg" [(ngModel)]="petForm.coverImg" placeholder="Имя файла фото (опционально)" />
+        <textarea name="description" [(ngModel)]="petForm.description" rows="3" placeholder="Описание"></textarea>
+
+        <button type="submit">Сохранить питомца</button>
+      </form>
+
+      <h3>Добавленные питомцы (черновики)</h3>
+      @if (petDrafts.length) {
+        <ul class="admin-list">
+          @for (item of petDrafts; track item.id) {
+            <li>
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.age }} лет, {{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+              <span class="admin-chip">{{ item.status }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="admin-empty">Пока нет добавленных питомцев.</p>
+      }
+    </section>
+  }
+
+  @if (activeTab === 'articles') {
+    <section class="admin-section">
+      <h2>Новая статья с советами</h2>
+      <form class="admin-form" (submit)="$event.preventDefault(); submitArticle()">
+        <input type="text" name="title" [(ngModel)]="articleForm.title" placeholder="Заголовок" required />
+        <textarea name="summary" [(ngModel)]="articleForm.summary" rows="2" placeholder="Краткое описание" required></textarea>
+        <textarea name="content" [(ngModel)]="articleForm.content" rows="5" placeholder="Текст статьи" required></textarea>
+        <button type="submit">Опубликовать статью</button>
+      </form>
+
+      <h3>Опубликованные статьи</h3>
+      @if (articles.length) {
+        <ul class="admin-list">
+          @for (item of articles; track item.id) {
+            <li>
+              <strong>{{ item.title }}</strong>
+              <span>{{ item.summary }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="admin-empty">Пока нет опубликованных статей.</p>
+      }
+    </section>
+  }
+
+  @if (activeTab === 'announcements') {
+    <section class="admin-section">
+      <h2>Новое объявление</h2>
+      <form class="admin-form" (submit)="$event.preventDefault(); submitAnnouncement()">
+        <input type="text" name="title" [(ngModel)]="announcementForm.title" placeholder="Заголовок объявления" required />
+        <textarea name="description" [(ngModel)]="announcementForm.description" rows="4" placeholder="Описание" required></textarea>
+        <input type="text" name="contact" [(ngModel)]="announcementForm.contact" placeholder="Контакт для связи" required />
+        <button type="submit">Отправить на модерацию</button>
+      </form>
+
+      <h3>Очередь модерации</h3>
+      @if (announcements.length) {
+        <ul class="admin-list admin-list--announcements">
+          @for (item of announcements; track item.id) {
+            <li>
+              <div>
+                <strong>{{ item.title }}</strong>
+                <p>{{ item.description }}</p>
+                <span>Контакт: {{ item.contact }}</span>
+                <span class="admin-chip" [class.admin-chip--ok]="item.status === 'published'" [class.admin-chip--bad]="item.status === 'rejected'">
+                  {{ item.status === 'pending' ? 'на модерации' : item.status === 'published' ? 'опубликовано' : 'отклонено' }}
+                </span>
+              </div>
+              @if (item.status === 'pending') {
+                <div class="admin-actions">
+                  <button type="button" class="admin-btn admin-btn--ok" (click)="approveAnnouncement(item.id)">Подтвердить</button>
+                  <button type="button" class="admin-btn admin-btn--bad" (click)="rejectAnnouncement(item.id)">Отклонить</button>
+                </div>
+              }
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="admin-empty">Новых объявлений на модерацию нет.</p>
+      }
+    </section>
+  }
+</section>

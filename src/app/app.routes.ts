@@ -9,67 +9,58 @@ import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
 
 import { Layout } from './layout/layout';
 import { Home } from './pages/home/home';
+import { adminAuthGuard } from './shared/guards/admin-auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: Layout,
     children: [
-
-      // Главная
       {
         path: '',
         component: Home,
         pathMatch: 'full'
       },
-
-      // Каталог животных
       {
         path: 'pets',
         component: Pets
       },
-
-      // Карточка животного
       {
         path: 'pets/:id',
         loadComponent: () => import('./pages/pet/pet').then((m) => m.Pet),
         data: { showAside: true }
       },
-
-      // Анкета на пристройство питомца
       {
         path: 'pets/:id/adopt',
         loadComponent: () => import('./pages/pet/adoption-form/adoption-form').then((m) => m.AdoptionForm)
       },
-
-      // Советы ветеринара
       {
         path: 'vet-advice',
         component: VetAdvice
       },
-
-      // Доска объявлений
       {
         path: 'board',
         component: Board
       },
-
-      // SOS
       {
         path: 'sos',
         component: Sos
       },
-
-      // Политика конфиденциальности
       {
         path: 'privacy-policy',
         component: PrivacyPolicy
+      },
+      {
+        path: 'admin/login',
+        loadComponent: () => import('./pages/admin/admin-login/admin-login').then((m) => m.AdminLogin)
+      },
+      {
+        path: 'admin',
+        canActivate: [adminAuthGuard],
+        loadComponent: () => import('./pages/admin/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard)
       }
-
     ]
   },
-
-  // fallback
   {
     path: '**',
     redirectTo: ''

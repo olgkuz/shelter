@@ -1,7 +1,12 @@
-﻿<section class="hero" [style.backgroundImage]="'url(' + currentImage + ')'" (mouseenter)="stopSlider()" (mouseleave)="startSlider()">
+<section class="hero" (mouseenter)="stopSlider()" (mouseleave)="startSlider()">
+  <div class="hero-split">
+    <div class="hero-half hero-half--main" [style.backgroundImage]="'url(' + currentImage + ')'"></div>
+    <div class="hero-half hero-half--pattern"></div>
+  </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <h1>Home</h1>
     <p>Приют для питомцев: забота, лечение и поиск нового дома.</p>
   </div>
+  <a class="hero-phone" href="tel:+79991234567">+7 (999) 123-45-67</a>
 </section>

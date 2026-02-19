@@ -12,9 +12,9 @@ export class Main implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   images = [
-    'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1920&q=80',
-    'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1920&q=80',
-    'https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1920&q=80'
+    'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=2400&q=80',
+    'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=2400&q=80',
+    'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=2400&q=80'
   ];
 
   currentIndex = 0;

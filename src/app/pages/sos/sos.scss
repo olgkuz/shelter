@@ -4,4 +4,20 @@
 
 .page {
   padding: 24px 16px;
+  text-align: center;
+}
+
+.page h1 {
+  color: var(--color-secondary);
+}
+
+.page p {
+  color: var(--color-muted);
+}
+
+.page__form-wrap {
+  margin: 24px auto 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

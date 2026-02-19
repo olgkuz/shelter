@@ -1,4 +1,18 @@
-<section class="page">
+<section class="page board">
   <h1>Доска объявлений</h1>
-  <p>Здесь будут объявления о помощи, поиске и пристройстве животных.</p>
+  <p>Здесь публикуются объявления, подтвержденные администратором.</p>
+
+  @if (announcements.length) {
+    <ul class="board__list">
+      @for (item of announcements; track item.id) {
+        <li class="board__item">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+          <div class="board__meta">Контакт: {{ item.contact }}</div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="board__empty">Пока нет опубликованных объявлений.</p>
+  }
 </section>
