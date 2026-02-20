@@ -24,3 +24,33 @@
   display: flex;
   justify-content: center;
 }
+
+.home-section--contact {
+  position: relative;
+  padding-bottom: 200px;
+}
+
+.home-contact-cat {
+  position: absolute;
+  right: clamp(12px, 6vw, 80px);
+  bottom: 0;
+  width: clamp(140px, 20vw, 240px);
+  aspect-ratio: 1 / 1;
+  background-image: var(--contact-cat-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom right;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .home-section--contact {
+    padding-bottom: 140px;
+  }
+
+  .home-contact-cat {
+    right: 8px;
+    width: 130px;
+    opacity: 0.95;
+  }
+}
