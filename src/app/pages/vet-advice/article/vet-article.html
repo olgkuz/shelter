@@ -1,0 +1,15 @@
+<section class="page vet-article">
+  <a class="vet-article__back" routerLink="/vet-advice">← К списку статей</a>
+
+  @if (loading) {
+    <p class="vet-article__state">Загрузка...</p>
+  } @else if (error) {
+    <p class="vet-article__state">{{ error }}</p>
+  } @else if (article) {
+    <article class="vet-article__card">
+      <h1>{{ article.title }}</h1>
+      <p class="vet-article__summary">{{ article.summary }}</p>
+      <p class="vet-article__content">{{ article.content }}</p>
+    </article>
+  }
+</section>

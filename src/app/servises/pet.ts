@@ -82,9 +82,9 @@ export class PetService {
     const filter = this.filterSubject.value;
     const params = this.buildPetsParams(filter);
 
-    return this.http.get<IPetsServerRes>(API.pets, { params }).pipe(
+    return this.http.get<IPetsServerRes | IPet[]>(API.pets, { params }).pipe(
       delay(300),
-      map((res) => Array.isArray(res?.pets) ? res.pets : []),
+      map((res) => this.extractPets(res)),
       catchError((err) => {
         console.log('loadPets error', err);
         return of([]);
@@ -106,8 +106,8 @@ export class PetService {
   getSimilarPets(id: string, limit = 8): Observable<IPet[]> {
     const params = new HttpParams().set('limit', String(limit));
 
-    return this.http.get<IPetsServerRes>(`${API.petSimilar}/${id}/similar`, { params }).pipe(
-      map((res) => Array.isArray(res?.pets) ? res.pets : []),
+    return this.http.get<IPetsServerRes | IPet[]>(`${API.petSimilar}/${id}/similar`, { params }).pipe(
+      map((res) => this.extractPets(res)),
       catchError((err) => {
         console.log('getSimilarPets error', err);
         return of([]);
@@ -257,6 +257,14 @@ export class PetService {
     if (filter.q) params = params.set('q', String(filter.q));
 
     return params;
+  }
+
+  private extractPets(res: IPetsServerRes | IPet[] | null | undefined): IPet[] {
+    if (Array.isArray(res)) {
+      return res;
+    }
+
+    return Array.isArray(res?.pets) ? res.pets : [];
   }
 }
 

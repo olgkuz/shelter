@@ -25,6 +25,27 @@ export const API = {
   images: `${serverIp}/images`,
 
 
+  // ====== Vet Advice ======
+
+  // Получить список статей ветеринара
+  vetAdvice: `${serverIp}/vet-advice`,
+
+  // Получить статью по id
+  vetAdviceById: `${serverIp}/vet-advice`, // + /:id
+
+
+  // ====== Announcements ======
+
+  // Получить все объявления
+  announcements: `${serverIp}/announcements`,
+
+  // Получить только опубликованные объявления
+  announcementsPublished: `${serverIp}/announcements/published`,
+
+  // Получить объявление по id
+  announcementById: `${serverIp}/announcements`, // + /:id
+
+
   // ====== Config (если понадобится) ======
 
   config: `/config/config.json`

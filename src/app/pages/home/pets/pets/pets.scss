@@ -78,6 +78,17 @@
   display: block;
 }
 
+.pets__image-empty {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--color-muted);
+  font-weight: 600;
+  padding: 12px;
+}
+
 .pets__info {
   padding: 12px 12px 14px;
 }

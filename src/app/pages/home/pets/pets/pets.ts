@@ -110,6 +110,14 @@ export class Pets implements OnInit, OnDestroy {
   get filteredPets(): IPet[] {
     return this.visiblePets;
   }
+
+  getPetImage(pet: IPet): string | null {
+    const cover = (pet.coverImg || '').trim();
+    if (cover) return cover;
+
+    const firstGallery = (pet.images || []).find((img) => Boolean(img?.trim()));
+    return firstGallery?.trim() || null;
+  }
 }
 
 

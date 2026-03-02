@@ -1,11 +1,20 @@
+import { PetSex, PetStatus } from './pet.model';
+
 export interface AdminPetDraft {
   id: string;
   name: string;
   age: number;
-  sex: 'male' | 'female';
-  status: string;
-  coverImg?: string;
-  description?: string;
+  sex: PetSex;
+  status: PetStatus;
+  description: string;
+  character: string;
+  sterilized: boolean;
+  vaccinated: boolean;
+  specialCare: boolean;
+  specialCareDetails: string;
+  priorityToHome?: boolean;
+  coverImg: string;
+  images: string[];
   createdAt: string;
 }
 
@@ -24,6 +33,8 @@ export interface Announcement {
   title: string;
   description: string;
   contact: string;
+  coverImg?: string;
+  images?: string[];
   createdAt: string;
   status: AnnouncementStatus;
   publishedAt?: string;

@@ -19,13 +19,17 @@
           >
             <ng-template pTemplate="item" let-item>
               <a class="same-pet__item" [routerLink]="['/pets', item.pet.id]">
-                <img
-                  class="same-pet__item-img"
-                  [ngSrc]="item.itemImageSrc"
-                  [alt]="item.alt"
-                  width="760"
-                  height="570"
-                />
+                @if (item.itemImageSrc) {
+                  <img
+                    class="same-pet__item-img"
+                    [ngSrc]="item.itemImageSrc"
+                    [alt]="item.alt"
+                    width="760"
+                    height="570"
+                  />
+                } @else {
+                  <div class="same-pet__item-empty">Фото скоро будет</div>
+                }
                 <div class="same-pet__item-info">
                   <div class="same-pet__item-title">{{ item.pet.name }}</div>
                   <div class="same-pet__item-meta">
@@ -39,13 +43,17 @@
             </ng-template>
 
             <ng-template pTemplate="thumbnail" let-item>
-              <img
-                class="same-pet__thumb"
-                [ngSrc]="item.thumbnailImageSrc"
-                [alt]="item.alt"
-                width="160"
-                height="64"
-              />
+              @if (item.thumbnailImageSrc) {
+                <img
+                  class="same-pet__thumb"
+                  [ngSrc]="item.thumbnailImageSrc"
+                  [alt]="item.alt"
+                  width="160"
+                  height="64"
+                />
+              } @else {
+                <div class="same-pet__thumb-empty">Нет фото</div>
+              }
             </ng-template>
           </p-galleria>
         </div>

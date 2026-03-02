@@ -41,6 +41,18 @@
   margin: 0;
 }
 
+.vet-advice__more {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.vet-advice__more:hover {
+  text-decoration: underline;
+}
+
 .vet-advice__empty {
   margin-top: 14px;
   color: var(--color-muted);

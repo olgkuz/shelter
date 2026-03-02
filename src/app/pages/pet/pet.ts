@@ -69,6 +69,24 @@ export class Pet implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.loaderService.setLoader(false);
   }
+
+  get mainImage(): string | null {
+    if (!this.pet) return null;
+
+    const cover = (this.pet.coverImg || '').trim();
+    if (cover) return cover;
+
+    const firstGallery = (this.pet.images || []).find((img) => Boolean(img?.trim()));
+    return firstGallery?.trim() || null;
+  }
+
+  get galleryImages(): string[] {
+    if (!this.pet) return [];
+
+    const combined = [this.pet.coverImg, ...(this.pet.images || [])]
+      .map((img) => (img || '').trim())
+      .filter(Boolean);
+
+    return Array.from(new Set(combined));
+  }
 }
-
-

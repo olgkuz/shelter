@@ -1,6 +1,10 @@
 export type PetSex = 'male' | 'female';
 
-export type PetStatus = 'забронирован' | 'дома на испытательном' | 'ждет родителей';
+export type PetStatus =
+  | 'забронирован'
+  | 'дома на испытательном'
+  | 'ждет родителей'
+  | 'находится под пожизненной опекой приюта';
 
 export interface IPet {
   id: string;
@@ -13,6 +17,7 @@ export interface IPet {
   sterilized: boolean;
   vaccinated: boolean;
   specialCare: boolean;
+  specialCareDetails?: string;
   coverImg: string;
   images: string[];
   priorityToHome?: boolean;

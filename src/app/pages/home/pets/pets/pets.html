@@ -44,13 +44,17 @@
             [attr.aria-label]="'Открыть карточку ' + item.name"
           >
             <div class="pets__image">
-              <img
-                [ngSrc]="imagesBase + '/' + item.coverImg"
-                alt="{{ item.name }}"
-                title="{{ item.name }}"
-                width="400"
-                height="300"
-              />
+              @if (getPetImage(item); as petImage) {
+                <img
+                  [ngSrc]="imagesBase + '/' + petImage"
+                  alt="{{ item.name }}"
+                  title="{{ item.name }}"
+                  width="400"
+                  height="300"
+                />
+              } @else {
+                <div class="pets__image-empty">Фото скоро будет</div>
+              }
             </div>
             <div class="pets__info">
               <div class="pets__name">{{ item.name }}</div>

@@ -2,13 +2,18 @@
   <h1>Советы ветеринара</h1>
   <p>Здесь публикуются статьи, загруженные администратором.</p>
 
-  @if (articles.length) {
+  @if (loading) {
+    <p class="vet-advice__empty">Загрузка...</p>
+  } @else if (error) {
+    <p class="vet-advice__empty">{{ error }}</p>
+  } @else if (articles.length) {
     <ul class="vet-advice__list">
       @for (item of articles; track item.id) {
         <li class="vet-advice__item">
           <h2>{{ item.title }}</h2>
           <p class="vet-advice__summary">{{ item.summary }}</p>
           <p>{{ item.content }}</p>
+          <a class="vet-advice__more" [routerLink]="['/vet-advice', item.id]">Читать полностью</a>
         </li>
       }
     </ul>

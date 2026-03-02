@@ -22,8 +22,8 @@ export class SamePet implements OnChanges, OnDestroy {
   similarPets: IPet[] = [];
   galleryItems: Array<{
     pet: IPet;
-    itemImageSrc: string;
-    thumbnailImageSrc: string;
+    itemImageSrc: string | null;
+    thumbnailImageSrc: string | null;
     alt: string;
     title: string;
   }> = [];
@@ -78,13 +78,16 @@ export class SamePet implements OnChanges, OnDestroy {
     this.sub = this.petService.getSimilarPets(this.pet.id).subscribe({
       next: (pets) => {
         this.similarPets = pets;
-        this.galleryItems = pets.map((p) => ({
-          pet: p,
-          itemImageSrc: `${this.imagesBase}/${p.coverImg}`,
-          thumbnailImageSrc: `${this.imagesBase}/${p.coverImg}`,
-          alt: p.name,
-          title: p.name
-        }));
+        this.galleryItems = pets.map((p) => {
+          const image = this.resolvePetImage(p);
+          return {
+            pet: p,
+            itemImageSrc: image ? `${this.imagesBase}/${image}` : null,
+            thumbnailImageSrc: image ? `${this.imagesBase}/${image}` : null,
+            alt: p.name,
+            title: p.name
+          };
+        });
         this.activeIndex = 0;
         this.loading = false;
         this.loaderService.setLoader(false);
@@ -96,6 +99,14 @@ export class SamePet implements OnChanges, OnDestroy {
         this.loaderService.setLoader(false);
       }
     });
+  }
+
+  private resolvePetImage(pet: IPet): string | null {
+    const cover = (pet.coverImg || '').trim();
+    if (cover) return cover;
+
+    const firstGallery = (pet.images || []).find((img) => Boolean(img?.trim()));
+    return firstGallery?.trim() || null;
   }
 }
 

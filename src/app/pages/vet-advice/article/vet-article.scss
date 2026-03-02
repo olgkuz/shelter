@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.page {
+  padding: 24px 16px;
+}
+
+.vet-article {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.vet-article__back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.vet-article__back:hover {
+  text-decoration: underline;
+}
+
+.vet-article__card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--color-surface);
+}
+
+.vet-article__card h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.vet-article__summary {
+  margin: 0 0 14px;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.vet-article__content {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.vet-article__state {
+  margin: 0;
+  color: var(--color-muted);
+}

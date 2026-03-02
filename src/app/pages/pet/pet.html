@@ -9,14 +9,18 @@
     <p-card class="pet__card">
       <ng-template pTemplate="header">
         <div class="pet__media">
-          <img
-            [ngSrc]="imagesBase + '/' + pet.coverImg"
-            alt="{{ pet.name }}"
-            title="{{ pet.name }}"
-            width="720"
-            height="540"
-            priority
-          />
+          @if (mainImage) {
+            <img
+              [ngSrc]="imagesBase + '/' + mainImage"
+              alt="{{ pet.name }}"
+              title="{{ pet.name }}"
+              width="720"
+              height="540"
+              priority
+            />
+          } @else {
+            <div class="pet__media-empty">Фото пока не добавлено</div>
+          }
         </div>
       </ng-template>
 
@@ -38,11 +42,15 @@
           <span class="pet__tag" [class.pet__tag--active]="pet.specialCare">Особый уход</span>
         </div>
 
+        @if (pet.specialCare && pet.specialCareDetails) {
+          <p class="pet__care"><strong>Особенности ухода:</strong> {{ pet.specialCareDetails }}</p>
+        }
+
         <a class="pet__adopt-btn" [routerLink]="['/pets', pet.id, 'adopt']">Хочу забрать домой</a>
 
-        @if (pet.images?.length) {
+        @if (galleryImages.length) {
           <div class="pet__gallery">
-            @for (img of pet.images; track img) {
+            @for (img of galleryImages; track img) {
               <img
                 [ngSrc]="imagesBase + '/' + img"
                 alt="{{ pet.name }} фото"

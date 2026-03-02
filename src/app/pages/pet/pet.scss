@@ -41,6 +41,16 @@
   display: block;
 }
 
+.pet__media-empty {
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  color: rgba(0, 0, 0, 0.55);
+  font-weight: 600;
+  text-align: center;
+  padding: 24px;
+}
+
 .pet__title {
   margin: 0 0 6px;
   font-size: 32px;
@@ -64,6 +74,10 @@
 
 .pet__description,
 .pet__character {
+  margin: 0 0 12px;
+}
+
+.pet__care {
   margin: 0 0 12px;
 }
 

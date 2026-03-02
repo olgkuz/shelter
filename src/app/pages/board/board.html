@@ -1,14 +1,33 @@
 <section class="page board">
   <h1>Доска объявлений</h1>
-  <p>Здесь публикуются объявления, подтвержденные администратором.</p>
+  <p>Здесь публикуются актуальные объявления, подтвержденные администратором.</p>
 
-  @if (announcements.length) {
+  @if (loading) {
+    <p class="board__empty">Загрузка...</p>
+  } @else if (error) {
+    <p class="board__empty">{{ error }}</p>
+  } @else if (announcements.length) {
     <ul class="board__list">
       @for (item of announcements; track item.id) {
         <li class="board__item">
+          @if (getAnnouncementImage(item); as announcementImage) {
+            <img
+              class="board__image"
+              [src]="imagesBase + '/' + announcementImage"
+              alt="{{ item.title }}"
+            />
+          }
           <h2>{{ item.title }}</h2>
           <p>{{ item.description }}</p>
           <div class="board__meta">Контакт: {{ item.contact }}</div>
+
+          @if (!isOutdatedReported(item.id)) {
+            <button type="button" class="board__report" (click)="reportOutdated(item.id)">
+              Сообщить, что объявление неактуально
+            </button>
+          } @else {
+            <p class="board__reported">Спасибо, мы проверим это объявление.</p>
+          }
         </li>
       }
     </ul>

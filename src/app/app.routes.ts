@@ -39,6 +39,11 @@ export const routes: Routes = [
         component: VetAdvice
       },
       {
+        path: 'vet-advice/:id',
+        loadComponent: () =>
+          import('./pages/vet-advice/article/vet-article').then((m) => m.VetArticlePage)
+      },
+      {
         path: 'board',
         component: Board
       },
