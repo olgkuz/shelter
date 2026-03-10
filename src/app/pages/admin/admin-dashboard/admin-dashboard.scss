@@ -103,6 +103,17 @@
   background: #216f67;
 }
 
+.admin-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-form__error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 14px;
+}
+
 .admin-list {
   list-style: none;
   margin: 0;

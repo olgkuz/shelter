@@ -47,6 +47,11 @@
   background: #216f67;
 }
 
+.admin-login__form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .admin-login__error {
   color: var(--color-danger);
   font-size: 14px;

@@ -1,7 +1,7 @@
 <section class="admin-login">
   <h1>Вход в админку</h1>
 
-  <form class="admin-login__form" (submit)="$event.preventDefault(); onSubmit()">
+  <form class="admin-login__form" #loginFormRef="ngForm" (submit)="$event.preventDefault(); onSubmit()">
     <label for="admin-login">Логин</label>
     <input
       id="admin-login"
@@ -10,6 +10,8 @@
       [(ngModel)]="loginValue"
       placeholder="Введите логин"
       autocomplete="username"
+      minlength="3"
+      maxlength="64"
       required
     />
 
@@ -21,6 +23,8 @@
       [(ngModel)]="passwordValue"
       placeholder="Введите пароль"
       autocomplete="current-password"
+      minlength="6"
+      maxlength="128"
       required
     />
 
@@ -28,6 +32,7 @@
       <div class="admin-login__error">{{ error }}</div>
     }
 
-    <button type="submit">Войти</button>
+    <button type="submit" [disabled]="loginFormRef.invalid || isLocked">Войти</button>
   </form>
 </section>
+

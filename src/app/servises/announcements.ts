@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 import { catchError, delay, map, Observable, of } from 'rxjs';
 import { IAnnouncement, IAnnouncementsServerRes } from '../models/announcement.model';
 import { API } from '../shared/api';
+import {
+  VALIDATION_LIMITS,
+  isValidContact,
+  isValidTitle,
+  normalizeText
+} from '../shared/validation/validation-rules';
 
 export interface CreateAnnouncementPayload {
   title: string;
@@ -42,7 +48,12 @@ export class AnnouncementsService {
   }
 
   createAnnouncement(payload: CreateAnnouncementPayload): Observable<IAnnouncement | null> {
-    return this.http.post<IAnnouncement>(API.announcements, payload).pipe(
+    const normalized = this.normalizePayload(payload);
+    if (!normalized) {
+      return of(null);
+    }
+
+    return this.http.post<IAnnouncement>(API.announcements, normalized).pipe(
       catchError((err) => {
         console.log('createAnnouncement error', err);
         return of(null);
@@ -51,17 +62,22 @@ export class AnnouncementsService {
   }
 
   uploadAnnouncement(payload: CreateAnnouncementPayload, files: File[]): Observable<IAnnouncement | null> {
-    const formData = new FormData();
-    formData.append('title', payload.title);
-    formData.append('description', payload.description);
-    formData.append('contact', payload.contact);
-    formData.append('published', String(Boolean(payload.published)));
-
-    if (payload.coverImg?.trim()) {
-      formData.append('coverImg', payload.coverImg.trim());
+    const normalized = this.normalizePayload(payload);
+    if (!normalized) {
+      return of(null);
     }
 
-    (payload.images || []).forEach((image) => {
+    const formData = new FormData();
+    formData.append('title', normalized.title);
+    formData.append('description', normalized.description);
+    formData.append('contact', normalized.contact);
+    formData.append('published', String(Boolean(normalized.published)));
+
+    if (normalized.coverImg?.trim()) {
+      formData.append('coverImg', normalized.coverImg.trim());
+    }
+
+    (normalized.images || []).forEach((image) => {
       const trimmed = image.trim();
       if (trimmed) {
         formData.append('images', trimmed);
@@ -98,5 +114,32 @@ export class AnnouncementsService {
     }
 
     return Array.isArray(res?.announcements) ? res.announcements : [];
+  }
+
+  private normalizePayload(payload: CreateAnnouncementPayload): CreateAnnouncementPayload | null {
+    const title = normalizeText(payload.title);
+    const description = normalizeText(payload.description);
+    const contact = normalizeText(payload.contact);
+    const coverImg = normalizeText(payload.coverImg || '');
+    const images = (payload.images || [])
+      .map((img) => normalizeText(img))
+      .filter(Boolean)
+      .slice(0, VALIDATION_LIMITS.maxImagesCount);
+
+    if (!isValidTitle(title)) return null;
+    if (
+      description.length < VALIDATION_LIMITS.announcementDescriptionMin ||
+      description.length > VALIDATION_LIMITS.announcementDescriptionMax
+    ) return null;
+    if (!isValidContact(contact)) return null;
+
+    return {
+      title,
+      description,
+      contact,
+      published: Boolean(payload.published),
+      coverImg,
+      images
+    };
   }
 }

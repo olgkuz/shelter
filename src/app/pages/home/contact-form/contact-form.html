@@ -1,20 +1,34 @@
-<form class="contact-form" (submit)="$event.preventDefault()">
-  <div class="field">
+<form class="contact-form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="field" [class.field--invalid]="isInvalid('name')">
     <label for="contact-name">Имя</label>
-    <input id="contact-name" type="text" name="name" placeholder="Ваше имя" required />
+    <input id="contact-name" type="text" formControlName="name" placeholder="Ваше имя" />
+    @if (isInvalid('name')) {
+      <small class="field__error">Введите имя от 2 до 60 символов.</small>
+    }
   </div>
 
-  <div class="field">
+  <div class="field" [class.field--invalid]="isInvalid('phone')">
     <label for="contact-phone">Телефон</label>
-    <input id="contact-phone" type="tel" name="phone" placeholder="+7 (___) ___-__-__" required />
+    <input id="contact-phone" type="tel" formControlName="phone" placeholder="+7 (___) ___-__-__" />
+    @if (isInvalid('phone')) {
+      <small class="field__error">Введите корректный номер телефона.</small>
+    }
   </div>
 
-  <div class="field checkbox-field">
-    <input id="contact-agree" type="checkbox" name="agree" required />
+  <div class="field checkbox-field" [class.field--invalid]="isInvalid('agree')">
+    <input id="contact-agree" type="checkbox" formControlName="agree" />
     <label for="contact-agree">
       Я соглашаюсь с политикой конфиденциальности и даю разрешение на обработку персональных данных
     </label>
   </div>
+  @if (isInvalid('agree')) {
+    <small class="field__error">Нужно подтвердить согласие.</small>
+  }
 
-  <button type="submit" class="submit-button">Связаться</button>
+  @if (successMessage) {
+    <p class="contact-form__success">{{ successMessage }}</p>
+  }
+
+  <button type="submit" class="submit-button" [disabled]="form.invalid">Связаться</button>
 </form>
+

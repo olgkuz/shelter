@@ -24,6 +24,16 @@
   font-size: 16px;
 }
 
+.field--invalid input[type='text'],
+.field--invalid input[type='tel'] {
+  border-color: var(--color-danger);
+}
+
+.field__error {
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
 .checkbox-field {
   grid-auto-flow: column;
   justify-content: start;
@@ -44,4 +54,15 @@
 
 .submit-button:hover {
   background: #216f67;
+}
+
+.submit-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.contact-form__success {
+  margin: 0;
+  color: #2d9362;
+  font-size: 14px;
 }

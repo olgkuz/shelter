@@ -2,11 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AdminPetDraft, VetArticle } from '../../../models/admin-content.model';
+import { IAnnouncement } from '../../../models/announcement.model';
 import { AdminAuthService } from '../../../servises/admin-auth';
 import { AdminContentService } from '../../../servises/admin-content';
-import { AdminPetDraft, VetArticle } from '../../../models/admin-content.model';
 import { AnnouncementsService } from '../../../servises/announcements';
-import { IAnnouncement } from '../../../models/announcement.model';
+import {
+  VALIDATION_LIMITS,
+  VALIDATION_PATTERNS,
+  isValidContact,
+  isValidTitle,
+  normalizeText,
+  validateImageFiles
+} from '../../../shared/validation/validation-rules';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -18,11 +26,12 @@ import { IAnnouncement } from '../../../models/announcement.model';
 export class AdminDashboard {
   activeTab: 'pets' | 'articles' | 'announcements' = 'pets';
   readonly petAgeOptions = Array.from({ length: 26 }, (_, index) => index);
+  readonly contactPatternHtml = VALIDATION_PATTERNS.contactHtml;
 
   readonly petStatuses = [
-    'Р·Р°Р±СЂРѕРЅРёСЂРѕРІР°РЅ',
-    'Р¶РґРµС‚ СЂРѕРґРёС‚РµР»РµР№',
-    'РЅР°С…РѕРґРёС‚СЃСЏ РїРѕРґ РїРѕР¶РёР·РЅРµРЅРЅРѕР№ РѕРїРµРєРѕР№ РїСЂРёСЋС‚Р°'
+    'забронирован',
+    'ждет родителей',
+    'находится под пожизненной опекой приюта'
   ] as const;
 
   petForm = this.createDefaultPetForm();
@@ -41,6 +50,12 @@ export class AdminDashboard {
   announcements: IAnnouncement[] = [];
   announcementsLoading = false;
   announcementsError = '';
+
+  petFormError = '';
+  articleFormError = '';
+  announcementFormError = '';
+  petImagesError = '';
+  announcementImagesError = '';
 
   constructor(
     private adminAuthService: AdminAuthService,
@@ -62,65 +77,74 @@ export class AdminDashboard {
 
   onPetImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement | null;
-    const files = input?.files;
-    if (!files) return;
+    const result = validateImageFiles(input?.files ?? null);
 
-    const names = Array.from(files)
-      .slice(0, 5)
-      .map((file) => file.name.trim())
-      .filter(Boolean);
-
-    this.petForm.images = names;
-    this.petForm.coverImg = names[0] ?? '';
+    this.petImagesError = result.error;
+    this.petForm.images = result.names;
+    this.petForm.coverImg = result.names[0] ?? '';
   }
 
   onAnnouncementImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement | null;
-    const files = input?.files;
-    if (!files) return;
+    const result = validateImageFiles(input?.files ?? null);
 
-    const selectedFiles = Array.from(files).slice(0, 5);
-    const names = selectedFiles
-      .map((file) => file.name.trim())
-      .filter(Boolean);
-
-    this.announcementFiles = selectedFiles;
-    this.announcementForm.images = names;
-    this.announcementForm.coverImg = names[0] ?? '';
+    this.announcementImagesError = result.error;
+    this.announcementFiles = result.files;
+    this.announcementForm.images = result.names;
+    this.announcementForm.coverImg = result.names[0] ?? '';
   }
 
   submitPet(): void {
-    const images = this.petForm.images
-      .map((img) => img.trim())
-      .filter(Boolean)
-      .slice(0, 5);
-    const coverImg = this.petForm.coverImg.trim() || images[0] || '';
+    this.petFormError = '';
+
+    if (this.petImagesError) {
+      this.petFormError = this.petImagesError;
+      return;
+    }
+
+    const validationError = this.validatePetForm();
+    if (validationError) {
+      this.petFormError = validationError;
+      return;
+    }
+
+    const images = this.normalizeImageNames(this.petForm.images);
+    const coverImg = normalizeText(this.petForm.coverImg) || images[0] || '';
 
     this.adminContentService.addPetDraft({
-      name: this.petForm.name.trim(),
+      name: normalizeText(this.petForm.name),
       age: Number(this.petForm.age),
       sex: this.petForm.sex,
       status: this.petForm.status as AdminPetDraft['status'],
-      description: this.petForm.description.trim(),
-      character: this.petForm.character.trim(),
+      description: normalizeText(this.petForm.description),
+      character: normalizeText(this.petForm.character),
       sterilized: this.petForm.sterilized,
       vaccinated: this.petForm.vaccinated,
       specialCare: this.petForm.specialCare,
-      specialCareDetails: this.petForm.specialCare ? this.petForm.specialCareDetails.trim() : '',
+      specialCareDetails: this.petForm.specialCare ? normalizeText(this.petForm.specialCareDetails) : '',
       priorityToHome: this.petForm.priorityToHome,
       coverImg,
       images
     });
 
     this.petForm = this.createDefaultPetForm();
+    this.petImagesError = '';
     this.refreshData();
   }
 
   submitArticle(): void {
+    this.articleFormError = '';
+
+    const validationError = this.validateArticleForm();
+    if (validationError) {
+      this.articleFormError = validationError;
+      return;
+    }
+
     this.adminContentService.addArticle({
-      title: this.articleForm.title.trim(),
-      summary: this.articleForm.summary.trim(),
-      content: this.articleForm.content.trim()
+      title: normalizeText(this.articleForm.title),
+      summary: normalizeText(this.articleForm.summary),
+      content: normalizeText(this.articleForm.content)
     });
 
     this.articleForm = {
@@ -133,16 +157,26 @@ export class AdminDashboard {
   }
 
   submitAnnouncement(): void {
-    const images = this.announcementForm.images
-      .map((img) => img.trim())
-      .filter(Boolean)
-      .slice(0, 5);
-    const coverImg = this.announcementForm.coverImg.trim() || images[0] || '';
+    this.announcementFormError = '';
+
+    if (this.announcementImagesError) {
+      this.announcementFormError = this.announcementImagesError;
+      return;
+    }
+
+    const validationError = this.validateAnnouncementForm();
+    if (validationError) {
+      this.announcementFormError = validationError;
+      return;
+    }
+
+    const images = this.normalizeImageNames(this.announcementForm.images);
+    const coverImg = normalizeText(this.announcementForm.coverImg) || images[0] || '';
 
     const payload = {
-      title: this.announcementForm.title.trim(),
-      description: this.announcementForm.description.trim(),
-      contact: this.announcementForm.contact.trim(),
+      title: normalizeText(this.announcementForm.title),
+      description: normalizeText(this.announcementForm.description),
+      contact: normalizeText(this.announcementForm.contact),
       published: this.announcementForm.published,
       coverImg,
       images
@@ -154,12 +188,13 @@ export class AdminDashboard {
 
     request$.subscribe((created) => {
       if (!created) {
-        this.announcementsError = 'РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ.';
+        this.announcementsError = 'Не удалось сохранить объявление.';
         return;
       }
 
       this.announcementForm = this.createDefaultAnnouncementForm();
       this.announcementFiles = [];
+      this.announcementImagesError = '';
       this.loadAnnouncements();
     });
   }
@@ -167,7 +202,7 @@ export class AdminDashboard {
   deleteAnnouncement(id: string): void {
     this.announcementsService.deleteAnnouncement(id).subscribe((ok) => {
       if (!ok) {
-        this.announcementsError = 'РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ РѕР±СЉСЏРІР»РµРЅРёРµ.';
+        this.announcementsError = 'Не удалось удалить объявление.';
         return;
       }
       this.loadAnnouncements();
@@ -216,5 +251,108 @@ export class AdminDashboard {
       coverImg: '',
       images: [] as string[]
     };
+  }
+
+  private validatePetForm(): string | null {
+    const name = normalizeText(this.petForm.name);
+    const description = normalizeText(this.petForm.description);
+    const character = normalizeText(this.petForm.character);
+    const specialCareDetails = normalizeText(this.petForm.specialCareDetails);
+
+    if (name.length < VALIDATION_LIMITS.petNameMin || name.length > VALIDATION_LIMITS.petNameMax) {
+      return 'Имя питомца должно быть от 2 до 80 символов.';
+    }
+
+    if (!this.petAgeOptions.includes(Number(this.petForm.age))) {
+      return 'Возраст питомца должен быть в диапазоне от 0 до 25 лет.';
+    }
+
+    if (this.petForm.sex !== 'male' && this.petForm.sex !== 'female') {
+      return 'Укажите корректный пол питомца.';
+    }
+
+    if (!(this.petStatuses as readonly string[]).includes(this.petForm.status)) {
+      return 'Укажите корректный статус питомца.';
+    }
+
+    if (
+      description.length < VALIDATION_LIMITS.petDescriptionMin ||
+      description.length > VALIDATION_LIMITS.petDescriptionMax
+    ) {
+      return 'Описание питомца должно быть от 10 до 1000 символов.';
+    }
+
+    if (
+      character.length < VALIDATION_LIMITS.petCharacterMin ||
+      character.length > VALIDATION_LIMITS.petCharacterMax
+    ) {
+      return 'Характер должен быть от 3 до 500 символов.';
+    }
+
+    if (
+      this.petForm.specialCare &&
+      (specialCareDetails.length < VALIDATION_LIMITS.specialCareDetailsMin ||
+        specialCareDetails.length > VALIDATION_LIMITS.specialCareDetailsMax)
+    ) {
+      return 'Особенности ухода должны быть от 5 до 500 символов.';
+    }
+
+    return null;
+  }
+
+  private validateArticleForm(): string | null {
+    const title = normalizeText(this.articleForm.title);
+    const summary = normalizeText(this.articleForm.summary);
+    const content = normalizeText(this.articleForm.content);
+
+    if (!isValidTitle(title)) {
+      return 'Заголовок статьи должен быть от 2 до 140 символов.';
+    }
+
+    if (
+      summary.length < VALIDATION_LIMITS.articleSummaryMin ||
+      summary.length > VALIDATION_LIMITS.articleSummaryMax
+    ) {
+      return 'Краткое описание статьи должно быть от 10 до 300 символов.';
+    }
+
+    if (
+      content.length < VALIDATION_LIMITS.articleContentMin ||
+      content.length > VALIDATION_LIMITS.articleContentMax
+    ) {
+      return 'Текст статьи должен быть от 30 до 10000 символов.';
+    }
+
+    return null;
+  }
+
+  private validateAnnouncementForm(): string | null {
+    const title = normalizeText(this.announcementForm.title);
+    const description = normalizeText(this.announcementForm.description);
+    const contact = normalizeText(this.announcementForm.contact);
+
+    if (!isValidTitle(title)) {
+      return 'Заголовок объявления должен быть от 2 до 140 символов.';
+    }
+
+    if (
+      description.length < VALIDATION_LIMITS.announcementDescriptionMin ||
+      description.length > VALIDATION_LIMITS.announcementDescriptionMax
+    ) {
+      return 'Описание объявления должно быть от 10 до 1500 символов.';
+    }
+
+    if (!isValidContact(contact)) {
+      return 'Контакт должен быть телефоном или email в корректном формате.';
+    }
+
+    return null;
+  }
+
+  private normalizeImageNames(images: string[]): string[] {
+    return images
+      .map((img) => normalizeText(img))
+      .filter(Boolean)
+      .slice(0, VALIDATION_LIMITS.maxImagesCount);
   }
 }

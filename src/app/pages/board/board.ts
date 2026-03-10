@@ -62,5 +62,5 @@ export class Board implements OnInit, OnDestroy {
 
   isOutdatedReported(id: string): boolean {
     return this.outdatedReportedIds.has(id);
-  }
+   }
 }
