@@ -11,6 +11,11 @@
     <button
       type="button"
       class="admin-tab"
+      id="admin-tab-pets"
+      role="tab"
+      [attr.aria-selected]="activeTab === 'pets'"
+      [attr.aria-controls]="'admin-tabpanel-pets'"
+      [attr.tabindex]="activeTab === 'pets' ? 0 : -1"
       [class.admin-tab--active]="activeTab === 'pets'"
       (click)="setTab('pets')"
     >
@@ -19,6 +24,11 @@
     <button
       type="button"
       class="admin-tab"
+      id="admin-tab-articles"
+      role="tab"
+      [attr.aria-selected]="activeTab === 'articles'"
+      [attr.aria-controls]="'admin-tabpanel-articles'"
+      [attr.tabindex]="activeTab === 'articles' ? 0 : -1"
       [class.admin-tab--active]="activeTab === 'articles'"
       (click)="setTab('articles')"
     >
@@ -27,6 +37,11 @@
     <button
       type="button"
       class="admin-tab"
+      id="admin-tab-announcements"
+      role="tab"
+      [attr.aria-selected]="activeTab === 'announcements'"
+      [attr.aria-controls]="'admin-tabpanel-announcements'"
+      [attr.tabindex]="activeTab === 'announcements' ? 0 : -1"
       [class.admin-tab--active]="activeTab === 'announcements'"
       (click)="setTab('announcements')"
     >
@@ -35,23 +50,32 @@
   </div>
 
   @if (activeTab === 'pets') {
-    <section class="admin-section">
+    <section
+      class="admin-section"
+      role="tabpanel"
+      id="admin-tabpanel-pets"
+      tabindex="0"
+      aria-labelledby="admin-tab-pets"
+    >
       <h2>Новый питомец</h2>
       <form class="admin-form" #petFormRef="ngForm" (submit)="$event.preventDefault(); submitPet()">
         <input type="text" name="name" [(ngModel)]="petForm.name" placeholder="Имя" minlength="2" maxlength="80" required />
 
-        <select name="age" [(ngModel)]="petForm.age" required>
+        <label for="pet-age">Возраст</label>
+        <select id="pet-age" name="age" [(ngModel)]="petForm.age" required>
           @for (age of petAgeOptions; track age) {
             <option [ngValue]="age">{{ age }} {{ age === 1 ? 'год' : (age > 1 && age < 5 ? 'года' : 'лет') }}</option>
           }
         </select>
 
-        <select name="sex" [(ngModel)]="petForm.sex" required>
+        <label for="pet-sex">Пол</label>
+        <select id="pet-sex" name="sex" [(ngModel)]="petForm.sex" required>
           <option value="male">Мальчик</option>
           <option value="female">Девочка</option>
         </select>
 
-        <select name="status" [(ngModel)]="petForm.status" required>
+        <label for="pet-status">Статус</label>
+        <select id="pet-status" name="status" [(ngModel)]="petForm.status" required>
           @for (status of petStatuses; track status) {
             <option [ngValue]="status">{{ status }}</option>
           }
@@ -101,8 +125,10 @@
           ></textarea>
         }
 
+        <label for="pet-images">Фото питомца</label>
         <input
           type="file"
+          id="pet-images"
           name="petImages"
           accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
@@ -111,11 +137,7 @@
 
         @if (petForm.images.length) {
           <p>Выбрано фото: {{ petForm.images.length }} / 5</p>
-          <ul class="admin-list">
-            @for (img of petForm.images; track img) {
-              <li>{{ img }}</li>
-            }
-          </ul>
+          <ul class="admin-list">@for (img of petForm.images; track img) {<li>{{ img }}</li>}</ul>
         }
 
         @if (petImagesError) {
@@ -128,25 +150,21 @@
         <button type="submit" [disabled]="petFormRef.invalid || !!petImagesError">Сохранить питомца</button>
       </form>
 
-      <h3>Добавленные питомцы (черновики)</h3>
-      @if (petDrafts.length) {
-        <ul class="admin-list">
-          @for (item of petDrafts; track item.id) {
-            <li>
-              <strong>{{ item.name }}</strong>
-              <span>{{ item.age }} лет, {{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
-              <span class="admin-chip">{{ item.status }}</span>
-              <span>Стерилизован: {{ item.sterilized ? 'да' : 'нет' }}</span>
-              <span>Привит: {{ item.vaccinated ? 'да' : 'нет' }}</span>
-              <span>Особый уход: {{ item.specialCare ? 'да' : 'нет' }}</span>
-              <span>Приоритетно в семью: {{ item.priorityToHome ? 'да' : 'нет' }}</span>
-              @if (item.specialCare && item.specialCareDetails) {
-                <span>Особенности: {{ item.specialCareDetails }}</span>
-              }
-              <span>Фото: {{ item.images?.length ?? 0 }}</span>
-            </li>
+      <h3>Добавленные питомцы</h3>
+      @if (pets.length) {
+        <ul class="admin-list">@for (item of pets; track item.id) {<li>
+          <strong>{{ item.name }}</strong>
+          <span>{{ item.age }} лет, {{ item.sex === 'male' ? 'мальчик' : 'девочка' }}</span>
+          <span class="admin-chip">{{ item.status }}</span>
+          <span>Стерилизован: {{ item.sterilized ? 'да' : 'нет' }}</span>
+          <span>Привит: {{ item.vaccinated ? 'да' : 'нет' }}</span>
+          <span>Особый уход: {{ item.specialCare ? 'да' : 'нет' }}</span>
+          <span>Приоритетно в семью: {{ item.priorityToHome ? 'да' : 'нет' }}</span>
+          @if (item.specialCare && item.specialCareDetails) {
+            <span>Особенности: {{ item.specialCareDetails }}</span>
           }
-        </ul>
+          <span>Фото: {{ item.images?.length ?? 0 }}</span>
+        </li>}</ul>
       } @else {
         <p class="admin-empty">Пока нет добавленных питомцев.</p>
       }
@@ -154,7 +172,13 @@
   }
 
   @if (activeTab === 'articles') {
-    <section class="admin-section">
+    <section
+      class="admin-section"
+      role="tabpanel"
+      id="admin-tabpanel-articles"
+      tabindex="0"
+      aria-labelledby="admin-tab-articles"
+    >
       <h2>Новая статья</h2>
       <form class="admin-form" #articleFormRef="ngForm" (submit)="$event.preventDefault(); submitArticle()">
         <input type="text" name="title" [(ngModel)]="articleForm.title" placeholder="Заголовок" minlength="2" maxlength="140" required />
@@ -170,14 +194,10 @@
 
       <h3>Опубликованные статьи</h3>
       @if (articles.length) {
-        <ul class="admin-list">
-          @for (item of articles; track item.id) {
-            <li>
-              <strong>{{ item.title }}</strong>
-              <span>{{ item.summary }}</span>
-            </li>
-          }
-        </ul>
+        <ul class="admin-list">@for (item of articles; track item.id) {<li>
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.summary }}</span>
+        </li>}</ul>
       } @else {
         <p class="admin-empty">Пока нет опубликованных статей.</p>
       }
@@ -185,7 +205,13 @@
   }
 
   @if (activeTab === 'announcements') {
-    <section class="admin-section">
+    <section
+      class="admin-section"
+      role="tabpanel"
+      id="admin-tabpanel-announcements"
+      tabindex="0"
+      aria-labelledby="admin-tab-announcements"
+    >
       <h2>Новое объявление</h2>
       <form class="admin-form" #announcementFormRef="ngForm" (submit)="$event.preventDefault(); submitAnnouncement()">
         <input type="text" name="title" [(ngModel)]="announcementForm.title" placeholder="Заголовок объявления" minlength="2" maxlength="140" required />
@@ -196,8 +222,10 @@
           Опубликовать сразу
         </label>
 
+        <label for="announcement-images">Фото объявления</label>
         <input
           type="file"
+          id="announcement-images"
           name="announcementImages"
           accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
@@ -206,11 +234,7 @@
 
         @if (announcementForm.images.length) {
           <p>Выбрано фото: {{ announcementForm.images.length }} / 5</p>
-          <ul class="admin-list">
-            @for (img of announcementForm.images; track img) {
-              <li>{{ img }}</li>
-            }
-          </ul>
+          <ul class="admin-list">@for (img of announcementForm.images; track img) {<li>{{ img }}</li>}</ul>
         }
 
         @if (announcementImagesError) {
@@ -223,32 +247,28 @@
         <button type="submit" [disabled]="announcementFormRef.invalid || !!announcementImagesError">Сохранить объявление</button>
       </form>
 
-      <h3>Объявления в базе</h3>
+      <h3>Объявления на модерации</h3>
       @if (announcementsLoading) {
         <p class="admin-empty">Загрузка...</p>
       } @else if (announcementsError) {
         <p class="admin-empty">{{ announcementsError }}</p>
-      } @else if (announcements.length) {
-        <ul class="admin-list admin-list--announcements">
-          @for (item of announcements; track item.id) {
-            <li>
-              <div>
-                <strong>{{ item.title }}</strong>
-                <p>{{ item.description }}</p>
-                <span>Контакт: {{ item.contact }}</span>
-                <span>Фото: {{ item.images?.length ?? (item.coverImg ? 1 : 0) }}</span>
-                <span class="admin-chip" [class.admin-chip--ok]="item.published" [class.admin-chip--bad]="!item.published">
-                  {{ item.published ? 'опубликовано' : 'не опубликовано' }}
-                </span>
-              </div>
-              <div class="admin-actions">
-                <button type="button" class="admin-btn admin-btn--bad" (click)="deleteAnnouncement(item.id)">Удалить из базы</button>
-              </div>
-            </li>
-          }
-        </ul>
+      } @else if (pendingAnnouncements.length) {
+        <ul class="admin-list admin-list--announcements">@for (item of pendingAnnouncements; track item.id) {<li>
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.description }}</p>
+            <span>Контакт: {{ item.contact }}</span>
+            <span>Фото: {{ item.images?.length ?? (item.coverImg ? 1 : 0) }}</span>
+            <span class="admin-chip admin-chip--bad">на модерации</span>
+          </div>
+          <div class="admin-actions">
+            <button type="button" class="admin-btn admin-btn--ok" (click)="approveAnnouncement(item.id)">Опубликовать</button>
+            <button type="button" class="admin-btn admin-btn--ghost" (click)="rejectAnnouncement(item.id)">Отклонить</button>
+            <button type="button" class="admin-btn admin-btn--bad" (click)="deleteAnnouncement(item.id)">Удалить из базы</button>
+          </div>
+        </li>}</ul>
       } @else {
-        <p class="admin-empty">Объявлений пока нет.</p>
+        <p class="admin-empty">Нет объявлений на модерации.</p>
       }
     </section>
   }

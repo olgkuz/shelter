@@ -106,6 +106,24 @@ export class AnnouncementsService {
     );
   }
 
+  approveAnnouncement(id: string): Observable<IAnnouncement | null> {
+    return this.http.post<IAnnouncement>(`${API.announcementById}/${id}/approve`, {}).pipe(
+      catchError((err) => {
+        console.log('approveAnnouncement error', err);
+        return of(null);
+      })
+    );
+  }
+
+  rejectAnnouncement(id: string): Observable<IAnnouncement | null> {
+    return this.http.post<IAnnouncement>(`${API.announcementById}/${id}/reject`, {}).pipe(
+      catchError((err) => {
+        console.log('rejectAnnouncement error', err);
+        return of(null);
+      })
+    );
+  }
+
   private extractAnnouncements(
     res: IAnnouncementsServerRes | IAnnouncement[] | null | undefined
   ): IAnnouncement[] {

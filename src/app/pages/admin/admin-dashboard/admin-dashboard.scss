@@ -186,6 +186,12 @@
   background: #be4a3f;
 }
 
+.admin-btn--ghost {
+  background: #e7edf1;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
 .admin-empty {
   color: var(--color-muted);
 }

@@ -13,6 +13,25 @@ import {
 } from 'rxjs';
 import { API } from '../shared/api';
 import { IPet, IPetFilter, IPetsServerRes } from '../models/pet.model';
+import {
+  VALIDATION_LIMITS,
+  normalizeText
+} from '../shared/validation/validation-rules';
+
+export interface CreatePetPayload {
+  name: string;
+  age: number | string;
+  sex: 'male' | 'female';
+  status: string;
+  description: string;
+  character: string;
+  sterilized: boolean | string;
+  vaccinated: boolean | string;
+  specialCare: boolean | string;
+  specialCareDetails?: string;
+  coverImg?: string;
+  images?: string[] | string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +107,68 @@ export class PetService {
       catchError((err) => {
         console.log('loadPets error', err);
         return of([]);
+      })
+    );
+  }
+
+  createPet(payload: CreatePetPayload): Observable<IPet | null> {
+    const normalized = this.normalizePayload(payload);
+    if (!normalized) {
+      return of(null);
+    }
+
+    return this.http.post<IPet>(API.pets, normalized).pipe(
+      catchError((err) => {
+        console.log('createPet error', err);
+        return of(null);
+      })
+    );
+  }
+
+  uploadPet(payload: CreatePetPayload, files: File[]): Observable<IPet | null> {
+    const normalized = this.normalizePayload(payload);
+    if (!normalized) {
+      return of(null);
+    }
+
+    const formData = new FormData();
+    formData.append('name', normalized.name);
+    formData.append('age', String(normalized.age));
+    formData.append('sex', normalized.sex);
+    formData.append('status', normalized.status);
+    formData.append('description', normalized.description);
+    formData.append('character', normalized.character);
+    formData.append('sterilized', String(Boolean(normalized.sterilized)));
+    formData.append('vaccinated', String(Boolean(normalized.vaccinated)));
+    formData.append('specialCare', String(Boolean(normalized.specialCare)));
+
+    if (normalized.specialCareDetails?.trim()) {
+      formData.append('specialCareDetails', normalized.specialCareDetails.trim());
+    }
+
+    if (normalized.coverImg?.trim()) {
+      formData.append('coverImg', normalized.coverImg.trim());
+    }
+
+    if (Array.isArray(normalized.images)) {
+      normalized.images.forEach((image) => {
+        const trimmed = image.trim();
+        if (trimmed) {
+          formData.append('images', trimmed);
+        }
+      });
+    } else if (typeof normalized.images === 'string' && normalized.images.trim()) {
+      formData.append('images', normalized.images.trim());
+    }
+
+    files.forEach((file) => {
+      formData.append('petImages', file);
+    });
+
+    return this.http.post<IPet>(`${API.pets}/upload`, formData).pipe(
+      catchError((err) => {
+        console.log('uploadPet error', err);
+        return of(null);
       })
     );
   }
@@ -265,6 +346,37 @@ export class PetService {
     }
 
     return Array.isArray(res?.pets) ? res.pets : [];
+  }
+
+  private normalizePayload(payload: CreatePetPayload): CreatePetPayload | null {
+    const name = normalizeText(payload.name);
+    const description = normalizeText(payload.description);
+    const character = normalizeText(payload.character);
+    const status = normalizeText(payload.status);
+    const specialCareDetails = normalizeText(payload.specialCareDetails || '');
+    const coverImg = normalizeText(payload.coverImg || '');
+    const images = Array.isArray(payload.images)
+      ? payload.images.map((img) => normalizeText(img)).filter(Boolean).slice(0, VALIDATION_LIMITS.maxImagesCount)
+      : payload.images;
+
+    const age = Number(payload.age);
+    if (!name || !status || !description || !character) return null;
+    if (!Number.isFinite(age) || age < 0) return null;
+
+    const specialCare = String(payload.specialCare).toLowerCase() === 'true';
+    if (specialCare && !specialCareDetails) return null;
+
+    return {
+      ...payload,
+      name,
+      description,
+      character,
+      status,
+      age,
+      specialCareDetails,
+      coverImg,
+      images
+    };
   }
 }
 

@@ -1,37 +1,95 @@
 <section class="page board">
   <h1>Доска объявлений</h1>
   <p>Здесь публикуются актуальные объявления, подтвержденные администратором.</p>
+  <a class="board__anchor" [routerLink]="['/board']" fragment="board-submit">Отправить объявление</a>
 
   @if (loading) {
     <p class="board__empty">Загрузка...</p>
   } @else if (error) {
     <p class="board__empty">{{ error }}</p>
   } @else if (announcements.length) {
-    <ul class="board__list">
-      @for (item of announcements; track item.id) {
-        <li class="board__item">
-          @if (getAnnouncementImage(item); as announcementImage) {
-            <img
-              class="board__image"
-              [src]="imagesBase + '/' + announcementImage"
-              alt="{{ item.title }}"
-            />
-          }
-          <h2>{{ item.title }}</h2>
-          <p>{{ item.description }}</p>
-          <div class="board__meta">Контакт: {{ item.contact }}</div>
-
-          @if (!isOutdatedReported(item.id)) {
-            <button type="button" class="board__report" (click)="reportOutdated(item.id)">
-              Сообщить, что объявление неактуально
-            </button>
-          } @else {
-            <p class="board__reported">Спасибо, мы проверим это объявление.</p>
-          }
-        </li>
+    <ul class="board__list">@for (item of announcements; track item.id) {<li class="board__item">
+      @if (getAnnouncementImage(item); as announcementImage) {
+        <img
+          class="board__image"
+          [src]="imagesBase + '/' + announcementImage"
+          alt="{{ item.title }}"
+        />
       }
-    </ul>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.description }}</p>
+      <div class="board__meta">Контакт: {{ item.contact }}</div>
+
+      @if (!isOutdatedReported(item.id)) {
+        <button type="button" class="board__report" (click)="reportOutdated(item.id)">
+          Сообщить, что объявление неактуально
+        </button>
+      } @else {
+        <p class="board__reported">Спасибо, мы проверим это объявление.</p>
+      }
+    </li>}</ul>
   } @else {
     <p class="board__empty">Пока нет опубликованных объявлений.</p>
   }
+
+  <section class="board__submit" id="board-submit">
+    <h2>Отправить объявление на рассмотрение</h2>
+    <form class="board__form" #announcementFormRef="ngForm" (submit)="$event.preventDefault(); submitAnnouncement()">
+      <input
+        type="text"
+        name="title"
+        [(ngModel)]="announcementForm.title"
+        placeholder="Заголовок"
+        minlength="2"
+        maxlength="140"
+        required
+      />
+
+      <textarea
+        name="description"
+        [(ngModel)]="announcementForm.description"
+        rows="4"
+        placeholder="Описание"
+        minlength="10"
+        maxlength="1500"
+        required
+      ></textarea>
+
+      <input
+        type="text"
+        name="contact"
+        [(ngModel)]="announcementForm.contact"
+        placeholder="Контакт для связи"
+        [pattern]="contactPatternHtml"
+        required
+      />
+
+      <label for="board-images">Фото объявления</label>
+      <input
+        type="file"
+        id="board-images"
+        name="announcementImages"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        multiple
+        (change)="onAnnouncementImagesSelected($event)"
+      />
+
+      @if (announcementForm.images.length) {
+        <p>Выбрано фото: {{ announcementForm.images.length }} / 5</p>
+        <ul class="board__images">@for (img of announcementForm.images; track img) {<li>{{ img }}</li>}</ul>
+      }
+
+      @if (imagesError) {
+        <p class="board__error">{{ imagesError }}</p>
+      }
+      @if (formError) {
+        <p class="board__error">{{ formError }}</p>
+      }
+      @if (formSuccess) {
+        <p class="board__success">{{ formSuccess }}</p>
+      }
+
+      <button type="submit" [disabled]="announcementFormRef.invalid || !!imagesError">Отправить на модерацию</button>
+    </form>
+  </section>
 </section>

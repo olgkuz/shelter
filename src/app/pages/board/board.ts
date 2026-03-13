@@ -1,14 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IAnnouncement } from '../../models/announcement.model';
 import { AnnouncementsService } from '../../servises/announcements';
 import { LoaderService } from '../../servises/loader';
 import { API } from '../../shared/api';
+import {
+  VALIDATION_PATTERNS,
+  normalizeText,
+  validateImageFiles
+} from '../../shared/validation/validation-rules';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, RouterModule],
   templateUrl: './board.html',
   styleUrl: './board.scss',
 })
@@ -16,9 +23,22 @@ export class Board implements OnInit, OnDestroy {
   announcements: IAnnouncement[] = [];
   loading = false;
   error = '';
+  formError = '';
+  formSuccess = '';
+  imagesError = '';
+  readonly contactPatternHtml = VALIDATION_PATTERNS.contactHtml;
   private readonly outdatedReportedIds = new Set<string>();
   private sub: Subscription | null = null;
   readonly imagesBase = API.images;
+  private announcementFiles: File[] = [];
+
+  announcementForm = {
+    title: '',
+    description: '',
+    contact: '',
+    coverImg: '',
+    images: [] as string[]
+  };
 
   constructor(
     private announcementsService: AnnouncementsService,
@@ -62,5 +82,56 @@ export class Board implements OnInit, OnDestroy {
 
   isOutdatedReported(id: string): boolean {
     return this.outdatedReportedIds.has(id);
-   }
+  }
+
+  onAnnouncementImagesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const result = validateImageFiles(input?.files ?? null);
+
+    this.imagesError = result.error;
+    this.announcementFiles = result.files;
+    this.announcementForm.images = result.names;
+    this.announcementForm.coverImg = result.names[0] ?? '';
+  }
+
+  submitAnnouncement(): void {
+    this.formError = '';
+    this.formSuccess = '';
+
+    if (this.imagesError) {
+      this.formError = this.imagesError;
+      return;
+    }
+
+    const payload = {
+      title: normalizeText(this.announcementForm.title),
+      description: normalizeText(this.announcementForm.description),
+      contact: normalizeText(this.announcementForm.contact),
+      published: false,
+      coverImg: normalizeText(this.announcementForm.coverImg),
+      images: this.announcementForm.images
+    };
+
+    const request$ = this.announcementFiles.length
+      ? this.announcementsService.uploadAnnouncement(payload, this.announcementFiles)
+      : this.announcementsService.createAnnouncement(payload);
+
+    request$.subscribe((created) => {
+      if (!created) {
+        this.formError = 'Не удалось отправить объявление на модерацию.';
+        return;
+      }
+
+      this.announcementForm = {
+        title: '',
+        description: '',
+        contact: '',
+        coverImg: '',
+        images: []
+      };
+      this.announcementFiles = [];
+      this.imagesError = '';
+      this.formSuccess = 'Спасибо! Объявление отправлено на модерацию.';
+    });
+  }
 }

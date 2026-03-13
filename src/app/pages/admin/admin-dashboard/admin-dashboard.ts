@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AdminPetDraft, VetArticle } from '../../../models/admin-content.model';
 import { IAnnouncement } from '../../../models/announcement.model';
+import { IPet } from '../../../models/pet.model';
+import { IVetArticle } from '../../../models/vet-article.model';
 import { AdminAuthService } from '../../../servises/admin-auth';
-import { AdminContentService } from '../../../servises/admin-content';
 import { AnnouncementsService } from '../../../servises/announcements';
+import { CreatePetPayload, PetService } from '../../../servises/pet';
+import { CreateVetArticlePayload, VetAdviceService } from '../../../servises/vet-advice';
 import {
   VALIDATION_LIMITS,
   VALIDATION_PATTERNS,
@@ -35,6 +37,7 @@ export class AdminDashboard {
   ] as const;
 
   petForm = this.createDefaultPetForm();
+  private petFiles: File[] = [];
 
   articleForm = {
     title: '',
@@ -45,8 +48,8 @@ export class AdminDashboard {
   announcementForm = this.createDefaultAnnouncementForm();
   private announcementFiles: File[] = [];
 
-  petDrafts: AdminPetDraft[] = [];
-  articles: VetArticle[] = [];
+  pets: IPet[] = [];
+  articles: IVetArticle[] = [];
   announcements: IAnnouncement[] = [];
   announcementsLoading = false;
   announcementsError = '';
@@ -59,7 +62,8 @@ export class AdminDashboard {
 
   constructor(
     private adminAuthService: AdminAuthService,
-    private adminContentService: AdminContentService,
+    private petService: PetService,
+    private vetAdviceService: VetAdviceService,
     private announcementsService: AnnouncementsService,
     private router: Router
   ) {
@@ -80,6 +84,7 @@ export class AdminDashboard {
     const result = validateImageFiles(input?.files ?? null);
 
     this.petImagesError = result.error;
+    this.petFiles = result.files;
     this.petForm.images = result.names;
     this.petForm.coverImg = result.names[0] ?? '';
   }
@@ -111,25 +116,36 @@ export class AdminDashboard {
     const images = this.normalizeImageNames(this.petForm.images);
     const coverImg = normalizeText(this.petForm.coverImg) || images[0] || '';
 
-    this.adminContentService.addPetDraft({
+    const payload: CreatePetPayload = {
       name: normalizeText(this.petForm.name),
       age: Number(this.petForm.age),
       sex: this.petForm.sex,
-      status: this.petForm.status as AdminPetDraft['status'],
+      status: this.petForm.status,
       description: normalizeText(this.petForm.description),
       character: normalizeText(this.petForm.character),
       sterilized: this.petForm.sterilized,
       vaccinated: this.petForm.vaccinated,
       specialCare: this.petForm.specialCare,
       specialCareDetails: this.petForm.specialCare ? normalizeText(this.petForm.specialCareDetails) : '',
-      priorityToHome: this.petForm.priorityToHome,
       coverImg,
       images
-    });
+    };
 
-    this.petForm = this.createDefaultPetForm();
-    this.petImagesError = '';
-    this.refreshData();
+    const request$ = this.petFiles.length
+      ? this.petService.uploadPet(payload, this.petFiles)
+      : this.petService.createPet(payload);
+
+    request$.subscribe((created) => {
+      if (!created) {
+        this.petFormError = 'Не удалось сохранить питомца.';
+        return;
+      }
+
+      this.petForm = this.createDefaultPetForm();
+      this.petFiles = [];
+      this.petImagesError = '';
+      this.loadPets();
+    });
   }
 
   submitArticle(): void {
@@ -141,19 +157,26 @@ export class AdminDashboard {
       return;
     }
 
-    this.adminContentService.addArticle({
+    const payload: CreateVetArticlePayload = {
       title: normalizeText(this.articleForm.title),
       summary: normalizeText(this.articleForm.summary),
       content: normalizeText(this.articleForm.content)
-    });
-
-    this.articleForm = {
-      title: '',
-      summary: '',
-      content: ''
     };
 
-    this.refreshData();
+    this.vetAdviceService.createArticle(payload).subscribe((created) => {
+      if (!created) {
+        this.articleFormError = 'Не удалось опубликовать статью.';
+        return;
+      }
+
+      this.articleForm = {
+        title: '',
+        summary: '',
+        content: ''
+      };
+
+      this.loadArticles();
+    });
   }
 
   submitAnnouncement(): void {
@@ -209,10 +232,42 @@ export class AdminDashboard {
     });
   }
 
+  approveAnnouncement(id: string): void {
+    this.announcementsService.approveAnnouncement(id).subscribe((updated) => {
+      if (!updated) {
+        this.announcementsError = 'Не удалось опубликовать объявление.';
+        return;
+      }
+      this.loadAnnouncements();
+    });
+  }
+
+  rejectAnnouncement(id: string): void {
+    this.announcementsService.rejectAnnouncement(id).subscribe((updated) => {
+      if (!updated) {
+        this.announcementsError = 'Не удалось отклонить объявление.';
+        return;
+      }
+      this.loadAnnouncements();
+    });
+  }
+
   private refreshData(): void {
-    this.petDrafts = this.adminContentService.getPetDrafts();
-    this.articles = this.adminContentService.getArticles();
+    this.loadArticles();
+    this.loadPets();
     this.loadAnnouncements();
+  }
+
+  private loadPets(): void {
+    this.petService.loadPets().subscribe((pets) => {
+      this.pets = pets;
+    });
+  }
+
+  private loadArticles(): void {
+    this.vetAdviceService.loadArticles().subscribe((articles) => {
+      this.articles = articles;
+    });
   }
 
   private loadAnnouncements(): void {
@@ -222,6 +277,10 @@ export class AdminDashboard {
       this.announcements = announcements;
       this.announcementsLoading = false;
     });
+  }
+
+  get pendingAnnouncements(): IAnnouncement[] {
+    return this.announcements.filter((item) => !item.published);
   }
 
   private createDefaultPetForm() {

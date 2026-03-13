@@ -4,6 +4,12 @@ import { catchError, delay, map, Observable, of } from 'rxjs';
 import { IVetArticle, IVetArticlesServerRes } from '../models/vet-article.model';
 import { API } from '../shared/api';
 
+export interface CreateVetArticlePayload {
+  title: string;
+  summary: string;
+  content: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +31,15 @@ export class VetAdviceService {
     return this.http.get<IVetArticle>(`${API.vetAdviceById}/${id}`).pipe(
       catchError((err) => {
         console.log('getArticleById error', err);
+        return of(null);
+      })
+    );
+  }
+
+  createArticle(payload: CreateVetArticlePayload): Observable<IVetArticle | null> {
+    return this.http.post<IVetArticle>(API.vetAdvice, payload).pipe(
+      catchError((err) => {
+        console.log('createArticle error', err);
         return of(null);
       })
     );
