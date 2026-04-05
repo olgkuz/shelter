@@ -7,7 +7,6 @@ import { AnnouncementsService } from '../../servises/announcements';
 import { LoaderService } from '../../servises/loader';
 import { API } from '../../shared/api';
 import {
-  VALIDATION_PATTERNS,
   normalizeText,
   validateImageFiles
 } from '../../shared/validation/validation-rules';
@@ -26,7 +25,6 @@ export class Board implements OnInit, OnDestroy {
   formError = '';
   formSuccess = '';
   imagesError = '';
-  readonly contactPatternHtml = VALIDATION_PATTERNS.contactHtml;
   private readonly outdatedReportedIds = new Set<string>();
   private sub: Subscription | null = null;
   readonly imagesBase = API.images;

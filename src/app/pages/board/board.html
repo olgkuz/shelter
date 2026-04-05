@@ -60,7 +60,6 @@
         name="contact"
         [(ngModel)]="announcementForm.contact"
         placeholder="Контакт для связи"
-        [pattern]="contactPatternHtml"
         required
       />
 
@@ -68,7 +67,6 @@
       <input
         type="file"
         id="board-images"
-        name="announcementImages"
         accept="image/jpeg,image/png,image/webp,image/gif"
         multiple
         (change)="onAnnouncementImagesSelected($event)"

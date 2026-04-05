@@ -1,4 +1,8 @@
-<section class="pets">
+<section class="pets" [class.pets--full]="!isHomePreview" [class.pets--home]="isHomePreview">
+  @if (!isHomePreview) {
+    <div class="pets__cat-decor" aria-hidden="true"></div>
+  }
+
   <div class="pets__header">
     <h2 class="pets__title">
       {{ isHomePreview ? 'Кому особенно нужен дом' : 'Наши питомцы' }}

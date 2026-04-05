@@ -24,7 +24,7 @@ export const VALIDATION_LIMITS = {
 
 export const VALIDATION_PATTERNS = {
   contact: /^(?:\+?[0-9()\-\s]{7,20}|[^\s@]+@[^\s@]+\.[^\s@]{2,})$/i,
-  contactHtml: '(?:\\+?[0-9()\\-\\s]{7,20}|[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,})',
+  contactHtml: '(?:\\+?[0-9()\\- ]{7,20}|[^@ ]+@[^@ ]+\\.[^@ ]{2,})',
   unsafeHtmlChars: /[<>]/,
   contactName: /^[\p{L}\s'-]+$/u,
   imageFileNameUnsafe: /[<>:"/\\|?*\x00-\x1F]/

@@ -7,6 +7,7 @@
   --font-main: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --bg-pattern-url: url('/assets/patterns/shelter-pattern.png');
   --contact-cat-url: url('/assets/decor/cat-profile.png');
+  --cat-look-down-url: url('/assets/decor/cat-look-down.png');
 
   --color-bg: #fcfbf7;
   --color-surface: #ffffff;
@@ -26,7 +27,9 @@
 html,
 body {
   background: var(--color-bg);
-  background-image: var(--bg-pattern-url);
+  background-image:
+    linear-gradient(rgba(252, 251, 247, 0.68), rgba(252, 251, 247, 0.68)),
+    var(--bg-pattern-url);
   background-repeat: repeat;
   background-size: 340px 340px;
   background-attachment: fixed;

@@ -129,7 +129,6 @@
         <input
           type="file"
           id="pet-images"
-          name="petImages"
           accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
           (change)="onPetImagesSelected($event)"
@@ -216,7 +215,7 @@
       <form class="admin-form" #announcementFormRef="ngForm" (submit)="$event.preventDefault(); submitAnnouncement()">
         <input type="text" name="title" [(ngModel)]="announcementForm.title" placeholder="Заголовок объявления" minlength="2" maxlength="140" required />
         <textarea name="description" [(ngModel)]="announcementForm.description" rows="4" placeholder="Описание" minlength="10" maxlength="1500" required></textarea>
-        <input type="text" name="contact" [(ngModel)]="announcementForm.contact" placeholder="Контакт для связи" [pattern]="contactPatternHtml" required />
+        <input type="text" name="contact" [(ngModel)]="announcementForm.contact" placeholder="Контакт для связи" required />
         <label>
           <input type="checkbox" name="published" [(ngModel)]="announcementForm.published" />
           Опубликовать сразу
@@ -226,7 +225,6 @@
         <input
           type="file"
           id="announcement-images"
-          name="announcementImages"
           accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
           (change)="onAnnouncementImagesSelected($event)"

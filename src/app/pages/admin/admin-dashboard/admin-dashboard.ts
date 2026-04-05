@@ -11,7 +11,6 @@ import { CreatePetPayload, PetService } from '../../../servises/pet';
 import { CreateVetArticlePayload, VetAdviceService } from '../../../servises/vet-advice';
 import {
   VALIDATION_LIMITS,
-  VALIDATION_PATTERNS,
   isValidContact,
   isValidTitle,
   normalizeText,
@@ -28,7 +27,6 @@ import {
 export class AdminDashboard {
   activeTab: 'pets' | 'articles' | 'announcements' = 'pets';
   readonly petAgeOptions = Array.from({ length: 26 }, (_, index) => index);
-  readonly contactPatternHtml = VALIDATION_PATTERNS.contactHtml;
 
   readonly petStatuses = [
     'забронирован',
